@@ -16,6 +16,7 @@ import appreciateImage from './assets/subscriptionpage/higherpackage.png';
 import Confetti from 'react-confetti';
 import { DateProvider } from './components/Forms/DateContext.js';
 import { ArrowRight, Award, Gift, Search, X } from 'lucide-react';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 
 
 const useWindowSize = () => {
@@ -76,14 +77,14 @@ const Popup = ({ setShowPopup }) => {
           onClick={() => setShowPopup(false)}
         ></button>
         <img src={appreciateImage} alt="Appreciation" className="popup-image" data-aos="flip-left" />
-        
 
 
-{/* <div className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 px-3" style={{ zIndex: 1000, backdropFilter: 'blur(4px)' }}> */}
-          {/* <div className="bg-white rounded-4 shadow-lg w-100" style={{ maxWidth: '500px', animation: 'fadeIn 0.3s ease-in-out', border: '1px solid #eee' }}> */}
 
-            {/* Header */}
-            {/* <div className="bg-gradient p-3 d-flex justify-content-between align-items-center text-black" style={{ background: 'linear-gradient(to right, #4f46e5, #8b5cf6)' }}>
+        {/* <div className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center bg-dark bg-opacity-50 px-3" style={{ zIndex: 1000, backdropFilter: 'blur(4px)' }}> */}
+        {/* <div className="bg-white rounded-4 shadow-lg w-100" style={{ maxWidth: '500px', animation: 'fadeIn 0.3s ease-in-out', border: '1px solid #eee' }}> */}
+
+        {/* Header */}
+        {/* <div className="bg-gradient p-3 d-flex justify-content-between align-items-center text-black" style={{ background: 'linear-gradient(to right, #4f46e5, #8b5cf6)' }}>
               <div className="d-flex align-items-center">
                 <Search className="me-2" size={28} />
                 <h5 className="mb-0 fw-semibold fs-6">Looking for Discounts?</h5>
@@ -96,10 +97,10 @@ const Popup = ({ setShowPopup }) => {
               </button>
             </div> */}
 
-            {/* Content */}
-            {/* <div className="p-4"> */}
-              {/* First Offer */}
-              {/* <div className="d-flex align-items-center mb-4">
+        {/* Content */}
+        {/* <div className="p-4"> */}
+        {/* First Offer */}
+        {/* <div className="d-flex align-items-center mb-4">
                 <div className="bg-warning bg-opacity-25 p-3 rounded-circle me-3 shadow">
                   <Gift className="text-warning" size={28} />
                 </div>
@@ -109,8 +110,8 @@ const Popup = ({ setShowPopup }) => {
                 </div>
               </div> */}
 
-              {/* Second Offer */}
-              {/* <div className="d-flex align-items-center mb-4">
+        {/* Second Offer */}
+        {/* <div className="d-flex align-items-center mb-4">
                 <div className="bg-success bg-opacity-25 p-3 rounded-circle me-3 shadow">
                   <Award className="text-success" size={28} />
                 </div>
@@ -120,8 +121,8 @@ const Popup = ({ setShowPopup }) => {
                 </div>
               </div> */}
 
-              {/* CTA Button */}
-              {/* <button
+        {/* CTA Button */}
+        {/* <button
                 onClick={handleEnrolNowClick}
                 className="btn btn-primary w-100 d-flex align-items-center justify-content-center fw-bold py-3 rounded-pill shadow-sm"
                 style={{ background: 'linear-gradient(to right, #4f46e5, #8b5cf6)', border: 'none' }}
@@ -129,14 +130,14 @@ const Popup = ({ setShowPopup }) => {
                 <span className="me-2">Enrol Now</span>
                 <ArrowRight size={20} />
               </button> */}
-            </div>
+      </div>
 
-            {/* Footer */}
-            {/* <div className="bg-light text-center px-4 py-2">
+      {/* Footer */}
+      {/* <div className="bg-light text-center px-4 py-2">
               <p className="text-muted small mb-0">🎁 Limited time offer. Terms and conditions apply.</p>
             </div> */}
-          {/* </div> */}
-        {/* </div> */}
+      {/* </div> */}
+      {/* </div> */}
 
 
 
@@ -145,6 +146,8 @@ const Popup = ({ setShowPopup }) => {
     </div>
   );
 };
+
+
 
 const AppContent = () => {
   const [showPopup, setShowPopup] = useState(false);
@@ -155,65 +158,57 @@ const AppContent = () => {
     Aos.init({ duration: 1000 });
   }, []);
 
-  useEffect(() => {
-    const path = location.pathname;
+  const routeMeta = {
+    "/": {
+      title: "Best Data Science Course Training institute in Hyderabad | SocialPrachar",
+      description: "Join the top-rated Data Science course in Hyderabad with real-time projects and expert mentors at SocialPrachar",
+    },
+    "/data-science": {
+      title: "Best Data Science Course Training institute in Hyderabad | SocialPrachar",
+      description: "Learn Data Science, AI, and ML in Hyderabad with hands-on training and placement support.",
+    },
+    "/full-stack-developer-course": {
+      title: "MERN Full Stack Developer Course training institute in Hyderabad | SocialPrachar",
+      description: "Become a MERN Stack Developer with our expert-led Full Stack Development course in Hyderabad.",
+    },
+    "/artificial-intelligence-course-training-institute-in-hyderabad": {
+      title: "Artificial Intelligence Course Training Institute in Hyderabad | SocialPrachar",
+      description: "Kickstart your AI career with our industry-aligned Artificial Intelligence course in Hyderabad.",
+    },
+    "/digital-marketing-course-training-institute-hyderabad": {
+      title: "Digital Marketing Course Training Institute in Hyderabad | SocialPrachar",
+      description: "Master SEO, SEM, SMM and more with our Digital Marketing training in Hyderabad.",
+    },
+    "/python-full-stack-development-course": {
+      title: "Python Full Stack Development Course in Hyderabad | SocialPrachar",
+      description: "Learn backend and frontend development with Python Full Stack course at SocialPrachar.",
+    },
+    "/awsdevopscourse": {
+      title: "AWS DevOps Course Training Institute in Hyderabad | SocialPrachar",
+      description: "Get certified with our AWS DevOps course designed for real-world cloud deployment practices.",
+    },
+    "/java-full-stack-development-course": {
+      title: "Java Full Stack Development Course in Hyderabad | SocialPrachar",
+      description: "Build a career in software development with our Java Full Stack Developer course.",
+    },
+  };
 
-    const routeMeta = {
-      "/": {
-        title: "Best Data Science Course Training institute in Hyderabad | SocialPrachar",
-        description: "Join the top-rated Data Science course in Hyderabad with real-time projects and expert mentors at SocialPrachar.",
-      },
-      "/data-science": {
-        title: "Best Data Science Course Training institute in Hyderabad | SocialPrachar",
-        description: "Learn Data Science, AI, and ML in Hyderabad with hands-on training and placement support.",
-      },
-      "/full-stack-developer-course": {
-        title: "MERN Full Stack Developer Course training institute in Hyderabad | SocialPrachar",
-        description: "Become a MERN Stack Developer with our expert-led Full Stack Development course in Hyderabad.",
-      },
-      "/artificial-intelligence-course-training-institute-in-hyderabad": {
-        title: "Artificial Intelligence Course Training Institute in Hyderabad | SocialPrachar",
-        description: "Kickstart your AI career with our industry-aligned Artificial Intelligence course in Hyderabad.",
-      },
-      "/digital-marketing-course-training-institute-hyderabad": {
-        title: "Digital Marketing Course Training Institute in Hyderabad | SocialPrachar",
-        description: "Master SEO, SEM, SMM and more with our Digital Marketing training in Hyderabad.",
-      },
-      "/python-full-stack-development-course": {
-        title: "Python Full Stack Development Course in Hyderabad | SocialPrachar",
-        description: "Learn backend and frontend development with Python Full Stack course at SocialPrachar.",
-      },
-      "/awsdevopscourse": {
-        title: "AWS DevOps Course Training Institute in Hyderabad | SocialPrachar",
-        description: "Get certified with our AWS DevOps course designed for real-world cloud deployment practices.",
-      },
-      "/java-full-stack-development-course": {
-        title: "Java Full Stack Development Course in Hyderabad | SocialPrachar",
-        description: "Build a career in software development with our Java Full Stack Developer course.",
-      },
-    };
+  const meta = routeMeta[location.pathname];
 
-    const meta = routeMeta[path];
+  // Fallback logic if route not found in the map
+  const title = meta?.title ||
+    location.pathname
+      .replace(/-/g, " ")
+      .replace(/\//g, "")
+      .replace(/\b\w/g, (c) => c.toUpperCase()) + " | SocialPrachar";
 
-    // Fallback logic if route not found in the map
-    const title = meta?.title ||
-      path
-        .replace(/-/g, " ")
-        .replace(/\//g, "")
-        .replace(/\b\w/g, (c) => c.toUpperCase()) + " | SocialPrachar";
+  const description = meta?.description ||
+    `Learn more about ${title.replace(" | SocialPrachar", "")} at SocialPrachar.`;
 
-    const description = meta?.description ||
-      `Learn more about ${title.replace(" | SocialPrachar", "")} at SocialPrachar.`;
-
-    // Set the document title
-    document.title = title;
-
-    // Set or update meta description
-    updateMetaDescription(description);
-
+  React.useEffect(() => {
     // Show popup logic
     const excludedPaths = ["/thank-you", "/privacy-policy", "/contact"];
-    if (!excludedPaths.includes(path)) {
+    if (!excludedPaths.includes(location.pathname)) {
       const timer = setTimeout(() => {
         setShowPopup(true);
       }, 10000);
@@ -223,40 +218,39 @@ const AppContent = () => {
     }
   }, [location.pathname]);
 
-  const updateMetaDescription = (content) => {
-    let metaTag = document.querySelector("meta[name='description']");
-    if (metaTag) {
-      metaTag.setAttribute("content", content);
-    } else {
-      metaTag = document.createElement("meta");
-      metaTag.name = "description";
-      metaTag.content = content;
-      document.head.appendChild(metaTag);
-    }
-  };
-  
-
   return (
     <>
+      <Helmet>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={`https://socialprachar.com${location.pathname}`} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={`https://socialprachar.com${location.pathname}`} />
+        <meta property="og:image" content="https://socialprachar.com/homepic.png" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content="https://socialprachar.com/homepic.png" />
+        {/* Add keywords meta tag if needed */}
+      </Helmet>
       <WishListProvider>
         <DateProvider>
           <ScrollToTop />
           <NavBar />
           <Suspense fallback={<Loading />}>
             <Routes>
-              {routes.map((route) => route)}
+              {routes.map((route, index) => React.cloneElement(route, { key: index }))}
               <Route path="*" element={<PageNotFound />} />
             </Routes>
           </Suspense>
-          {/* <QuickHelpButton /> */}
-          {!excludedPaths.includes(location.pathname) && <QuickHelpButton />}
 
-          {/* Popup Modal */}
+          {!excludedPaths.includes(location.pathname) && <QuickHelpButton />}
           {showPopup && <Popup setShowPopup={setShowPopup} />}
         </DateProvider>
       </WishListProvider>
 
-      {/* Popup Styling */}
       <style>
         {`
           .popup-overlay {
@@ -305,9 +299,11 @@ const AppContent = () => {
 
 const App = () => {
   return (
-    <BrowserRouter>
-      <AppContent />
-    </BrowserRouter>
+    <HelmetProvider>
+      <BrowserRouter>
+        <AppContent />
+      </BrowserRouter>
+    </HelmetProvider>
   );
 };
 

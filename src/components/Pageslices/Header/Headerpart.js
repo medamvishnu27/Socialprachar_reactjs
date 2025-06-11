@@ -42,8 +42,6 @@ import google from '../../../assets/successStories/google.png';
 import jd_logo from '../../../assets/successStories/Just-Dial_logo.png';
 import glassdoor_logo from '../../../assets/successStories/glassdoor_logo.png';
 
-
-
 const logos = [
     { src: company1Logo, alt: "Company 1" },
     { src: company2Logo, alt: "Company 2" },
@@ -100,8 +98,280 @@ const symbols = [
     { img: booksymbol, text: "Flexible Learning: Classroom & Online Options", className: style.symbol },
     { img: successLogo, text: "17,000+ Successful Career Transitions Since 2014", className: style.symbol },
     { img: partnershipLogo, text: "550+ Batches Completed, 350+ Hiring Partners", className: style.symbol },
-    { img: MobileIconLogo, text: "Lifetime LMS Access & Dedicated Mobile App", className: style.symbol },
+    { img: MobileIconLogo, text: "Lifetime LMS Access & Dedicated Mobile App", className: style.symbol },
 ];
+
+// Course metadata mapping
+const courseMetadata = {
+    "/data-science": {
+        title: "Best Data Science Course Training institute in Hyderabad | SocialPrachar",
+        description: "Learn Data Science, AI, and ML in Hyderabad with hands-on training and placement support.",
+    },
+    "/full-stack-developer-course": {
+        title: "MERN Full Stack Developer Course training institute in Hyderabad | SocialPrachar",
+        description: "Become a MERN Stack Developer with our expert-led Full Stack Development course in Hyderabad.",
+    },
+    "/artificial-intelligence-course-training-institute-in-hyderabad": {
+        title: "Artificial Intelligence Course Training Institute in Hyderabad | SocialPrachar",
+        description: "Kickstart your AI career with our industry-aligned Artificial Intelligence course in Hyderabad.",
+    },
+    "/digital-marketing-course-training-institute-hyderabad": {
+        title: "Digital Marketing Course Training Institute in Hyderabad | SocialPrachar",
+        description: "Master SEO, SEM, SMM and more with our Digital Marketing training in Hyderabad.",
+    },
+    "/python-full-stack-development-course": {
+        title: "Python Full Stack Development Course in Hyderabad | SocialPrachar",
+        description: "Learn backend and frontend development with Python Full Stack course at SocialPrachar.",
+    },
+    "/awsdevopscourse": {
+        title: "AWS DevOps Course Training Institute in Hyderabad | SocialPrachar",
+        description: "Get certified with our AWS DevOps course designed for real-world cloud deployment practices.",
+    },
+    "/java-full-stack-development-course": {
+        title: "Java Full Stack Development Course in Hyderabad | SocialPrachar",
+        description: "Build a career in software development with our Java Full Stack Developer course.",
+    }
+};
+
+// Share Component
+const ShareButton = ({ courseData, currentUrl, courseImage }) => {
+    const [showShareMenu, setShowShareMenu] = useState(false);
+    const [copySuccess, setCopySuccess] = useState(false);
+
+    // Update meta tags dynamically without react-helmet
+    useEffect(() => {
+        if (courseData) {
+            // Update document title
+            document.title = courseData.title;
+            
+            // Update or create meta tags
+            const updateMetaTag = (property, content, isProperty = false) => {
+                const attribute = isProperty ? 'property' : 'name';
+                let meta = document.querySelector(`meta[${attribute}="${property}"]`);
+                if (!meta) {
+                    meta = document.createElement('meta');
+                    meta.setAttribute(attribute, property);
+                    document.head.appendChild(meta);
+                }
+                meta.setAttribute('content', content);
+            };
+
+            // Basic meta tags
+            updateMetaTag('description', courseData.description);
+            
+            // Open Graph tags
+            updateMetaTag('og:title', courseData.title, true);
+            updateMetaTag('og:description', courseData.description, true);
+            updateMetaTag('og:image', courseImage, true);
+            updateMetaTag('og:url', currentUrl, true);
+            updateMetaTag('og:type', 'website', true);
+            updateMetaTag('og:site_name', 'SocialPrachar', true);
+            
+            // Twitter Card tags
+            updateMetaTag('twitter:card', 'summary_large_image');
+            updateMetaTag('twitter:title', courseData.title);
+            updateMetaTag('twitter:description', courseData.description);
+            updateMetaTag('twitter:image', courseImage);
+            updateMetaTag('twitter:site', '@SocialPrachar');
+            
+            // Additional meta tags
+            updateMetaTag('og:image:width', '1200', true);
+            updateMetaTag('og:image:height', '630', true);
+            updateMetaTag('og:image:alt', courseData.title, true);
+            
+            // Update canonical link
+            let canonical = document.querySelector('link[rel="canonical"]');
+            if (!canonical) {
+                canonical = document.createElement('link');
+                canonical.setAttribute('rel', 'canonical');
+                document.head.appendChild(canonical);
+            }
+            canonical.setAttribute('href', currentUrl);
+        }
+    }, [courseData, currentUrl, courseImage]);
+
+    const shareData = {
+        title: courseData?.title || 'SocialPrachar Course',
+        description: courseData?.description || 'Learn with industry experts at SocialPrachar',
+        url: currentUrl,
+        image: courseImage
+    };
+
+    const handleShare = (platform) => {
+        const encodedUrl = encodeURIComponent(shareData.url);
+        const encodedTitle = encodeURIComponent(shareData.title);
+        const encodedDescription = encodeURIComponent(shareData.description);
+        
+        let shareUrl = '';
+        
+        switch (platform) {
+            case 'facebook':
+                shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedTitle}`;
+                break;
+            case 'twitter':
+                shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}&via=SocialPrachar`;
+                break;
+            case 'linkedin':
+                shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedTitle}&summary=${encodedDescription}`;
+                break;
+            case 'whatsapp':
+                shareUrl = `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`;
+                break;
+            case 'telegram':
+                shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`;
+                break;
+            case 'email':
+                shareUrl = `mailto:?subject=${encodedTitle}&body=${encodedDescription}%0A%0A${encodedUrl}`;
+                break;
+            default:
+                return;
+        }
+        
+        if (platform === 'email') {
+            window.location.href = shareUrl;
+        } else {
+            window.open(shareUrl, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
+        }
+        
+        setShowShareMenu(false);
+    };
+
+    const handleCopyLink = async () => {
+        try {
+            await navigator.clipboard.writeText(shareData.url);
+            setCopySuccess(true);
+            setTimeout(() => setCopySuccess(false), 2000);
+        } catch (err) {
+            console.error('Failed to copy link:', err);
+            // Fallback for older browsers
+            const textArea = document.createElement('textarea');
+            textArea.value = shareData.url;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                setCopySuccess(true);
+                setTimeout(() => setCopySuccess(false), 2000);
+            } catch (fallbackErr) {
+                console.error('Fallback copy failed:', fallbackErr);
+            }
+            document.body.removeChild(textArea);
+        }
+        setShowShareMenu(false);
+    };
+
+    const handleNativeShare = async () => {
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: shareData.title,
+                    text: shareData.description,
+                    url: shareData.url,
+                });
+                setShowShareMenu(false);
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    console.error('Error sharing:', err);
+                }
+            }
+        }
+    };
+
+    // Close menu when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (showShareMenu && !event.target.closest(`.${style.shareButtonContainer}`)) {
+                setShowShareMenu(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, [showShareMenu]);
+
+    return (
+        <div className={style.shareButtonContainer}>
+            <button 
+                className={style.shareButton}
+                onClick={() => setShowShareMenu(!showShareMenu)}
+                aria-label="Share course"
+                title="Share this course"
+            >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z" fill="currentColor"/>
+                </svg>
+            </button>
+            
+            {showShareMenu && (
+                <div className={style.shareMenu}>
+                    <div className={style.shareMenuHeader}>
+                        <h4>Share Course</h4>
+                        <button 
+                            className={style.closeShareMenu}
+                            onClick={() => setShowShareMenu(false)}
+                            aria-label="Close share menu"
+                        >
+                            ×
+                        </button>
+                    </div>
+                    
+                    <div className={style.shareOptions}>
+                        {navigator.share && (
+                            <button className={style.shareOption} onClick={handleNativeShare}>
+                                <span className={style.shareIcon}>📱</span>
+                                <span>Share</span>
+                            </button>
+                        )}
+                        
+                        <button className={style.shareOption} onClick={() => handleShare('facebook')}>
+                            <span className={style.shareIcon}>📘</span>
+                            <span>Facebook</span>
+                        </button>
+                        
+                        <button className={style.shareOption} onClick={() => handleShare('twitter')}>
+                            <span className={style.shareIcon}>🐦</span>
+                            <span>Twitter</span>
+                        </button>
+                        
+                        <button className={style.shareOption} onClick={() => handleShare('linkedin')}>
+                            <span className={style.shareIcon}>💼</span>
+                            <span>LinkedIn</span>
+                        </button>
+                        
+                        <button className={style.shareOption} onClick={() => handleShare('whatsapp')}>
+                            <span className={style.shareIcon}>💬</span>
+                            <span>WhatsApp</span>
+                        </button>
+                        
+                        <button className={style.shareOption} onClick={() => handleShare('telegram')}>
+                            <span className={style.shareIcon}>✈️</span>
+                            <span>Telegram</span>
+                        </button>
+                        
+                        <button className={style.shareOption} onClick={() => handleShare('email')}>
+                            <span className={style.shareIcon}>📧</span>
+                            <span>Email</span>
+                        </button>
+                        
+                        <button 
+                            className={`${style.shareOption} ${copySuccess ? style.copied : ''}`} 
+                            onClick={handleCopyLink}
+                        >
+                            <span className={style.shareIcon}>📋</span>
+                            <span>{copySuccess ? 'Copied!' : 'Copy Link'}</span>
+                        </button>
+                    </div>
+                </div>
+            )}
+            
+            {showShareMenu && <div className={style.shareOverlay} onClick={() => setShowShareMenu(false)} />}
+        </div>
+    );
+};
 
 const Headerpart = (courseID) => {
     const { slug } = useParams();
@@ -109,6 +379,11 @@ const Headerpart = (courseID) => {
     const redLineRef = useRef(null);
     const doughtsPartRef = useRef(null);
     const [isPopupVisible, setIsPopupVisible] = useState(false);
+
+    // Get current URL and course metadata
+    const currentUrl = window.location.href;
+    const currentPath = window.location.pathname;
+    const courseData = courseMetadata[currentPath] || courseMetadata[`/${slug}`];
 
     useEffect(() => {
         const cardDetails = data.find(item => item.slug === slug);
@@ -122,7 +397,6 @@ const Headerpart = (courseID) => {
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
-
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -145,30 +419,23 @@ const Headerpart = (courseID) => {
         };
     }, []);
 
-
-
     const togglePopup = () => {
         if (isPopupVisible) {
-            // Close the form
             setIsPopupVisible(false);
         } else {
-            // Open the form
             setIsPopupVisible(true);
         }
     };
 
-
-
     return (
         <div className={style.headerContainer}>
-            {/* <img loading="lazy" src={BackgroundImg} alt="Background" className={style.backgroundImage} /> */}
             <img
                 src={BackgroundImg}
                 srcSet={`
-    ${BackgroundImg} 400w,
-    ${BackgroundImg} 800w,
-    ${BackgroundImg} 1200w
-  `}
+                    ${BackgroundImg} 400w,
+                    ${BackgroundImg} 800w,
+                    ${BackgroundImg} 1200w
+                `}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 1200px"
                 alt="Descriptive background image"
                 loading="lazy"
@@ -177,6 +444,14 @@ const Headerpart = (courseID) => {
                 height="800"
                 className={style.backgroundImage}
             />
+            
+            {/* Share Button */}
+            <ShareButton 
+                courseData={courseData} 
+                currentUrl={currentUrl} 
+                courseImage={JD_course}
+            />
+            
             <div className={style.contentContainer}>
                 <div className={style.symbolsContainer}>
                     <h3 className={style.headerText}>
@@ -219,7 +494,6 @@ const Headerpart = (courseID) => {
                 </div>
             </div>
 
-
             <div className={style.scrollSection}>
                 <p>Trusted by Learners Working At Top Companies</p>
                 <div className={style.logoContainer}>
@@ -236,16 +510,11 @@ const Headerpart = (courseID) => {
                 </div>
             </div>
 
-
             <div className={style.testimonials}>
                 <div className={`d-flex m-4 ${isMobile ? 'flex-column text-center' : 'justify-content-center align-items-center gap-2'}`}>
                     <h3 className="fw-bold">Results  That 
                         <span style={{ color: '#ff5003' }}> Speak Louder </span> Than  <span style={{ color: '#ff5003' }}>Words</span>     
                     </h3>
-                    {/* <button className={`btn btn-primary fw-bold ${Buttonstyle.shinebtn}`} onClick={togglePopup}>
-                        Download Roadmap
-                    </button>
-                    {isPopupVisible && <HeaderSignInForm onClose={togglePopup} courseID={courseID} actionType="Download Roadmap" />} */}
                 </div>
                 <div className="container">
                     {/* Ratings Section */}
@@ -264,9 +533,8 @@ const Headerpart = (courseID) => {
                                                 alt={item.title}
                                                 style={{ maxHeight: '50px', objectFit: 'contain', paddingRight: '15px' }}
                                             />
-                                        ) : null} {/* Remove the span if no logo */}
+                                        ) : null}
                                     </div>
-
                                     <div>
                                         <div className="fw-bold">{item.title}</div>
                                         <div>{item.rating}</div>
@@ -276,26 +544,21 @@ const Headerpart = (courseID) => {
                         ))}
                     </div>
 
-
                     {/* Stats Section */}
                     <div className="row text-center justify-content-center gap-3">
                         {stats.map((stat, index) => (
-                            <div class={`${style.statcard} shadow-sm`} key={index}>
-                                <div class={style.iconcontainer}>
-                                    <div class={`${style.hexagon}`}
+                            <div className={`${style.statcard} shadow-sm`} key={index}>
+                                <div className={style.iconcontainer}>
+                                    <div className={`${style.hexagon}`}
                                         style={{ backgroundColor: stat.color, boxShadow: '0 12px 12px rgba(80, 0, 185, 0.85)' }}
                                     >{stat.value}</div>
                                 </div>
-                                <div class={style.content}>
-                                    <div class={style.label}>{stat.label}</div>
+                                <div className={style.content}>
+                                    <div className={style.label}>{stat.label}</div>
                                 </div>
                             </div>
                         ))}
                     </div>
-
-
-
-
                 </div>
 
                 <Testmonials />
