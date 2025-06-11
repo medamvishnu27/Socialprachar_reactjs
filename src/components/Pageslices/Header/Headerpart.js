@@ -1,14 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import JD_course from '../../../assets/small bussines award.png';
 import Buttonstyle from '../Enrollbutton/Enrollbutton.module.css';
-// headerpage logos
 import unlockLogo from '../../../assets/AssetsOfDetailsPage/masterclass/unlock.png';
 import booksymbol from '../../../assets/AssetsOfDetailsPage/masterclass/open-book.png';
 import successLogo from '../../../assets/AssetsOfDetailsPage/masterclass/success.png';
 import partnershipLogo from '../../../assets/AssetsOfDetailsPage/masterclass/hand-shake.png';
 import MobileIconLogo from '../../../assets/AssetsOfDetailsPage/masterclass/mobile-development.png';
-// import blackLine from '../../../assets/AssetsOfDetailsPage/blackLine.svg';
-
 import style from './Header.module.css';
 import Enrollbutton from './../Enrollbutton/Enrollbutton';
 import BackgroundImg from '../../../assets/AssetsOfDetailsPage/background.png';
@@ -41,6 +38,7 @@ import HeaderSignInForm from './HeaderSignInForm';
 import google from '../../../assets/successStories/google.png';
 import jd_logo from '../../../assets/successStories/Just-Dial_logo.png';
 import glassdoor_logo from '../../../assets/successStories/glassdoor_logo.png';
+import { Share2, Facebook, Twitter, Linkedin, Instagram, Copy,Star } from 'lucide-react';
 
 const logos = [
     { src: company1Logo, alt: "Company 1" },
@@ -101,7 +99,6 @@ const symbols = [
     { img: MobileIconLogo, text: "Lifetime LMS Access & Dedicated Mobile App", className: style.symbol },
 ];
 
-// Course metadata mapping
 const courseMetadata = {
     "/data-science": {
         title: "Best Data Science Course Training institute in Hyderabad | SocialPrachar",
@@ -133,60 +130,68 @@ const courseMetadata = {
     }
 };
 
-// Share Component
 const ShareButton = ({ courseData, currentUrl, courseImage }) => {
     const [showShareMenu, setShowShareMenu] = useState(false);
     const [copySuccess, setCopySuccess] = useState(false);
+    const [previewUrl, setPreviewUrl] = useState('');
 
-    // Update meta tags dynamically without react-helmet
+    useEffect(() => {
+        setPreviewUrl(currentUrl);
+    }, [currentUrl]);
+
     useEffect(() => {
         if (courseData) {
-            // Update document title
-            document.title = courseData.title;
-            
-            // Update or create meta tags
-            const updateMetaTag = (property, content, isProperty = false) => {
-                const attribute = isProperty ? 'property' : 'name';
-                let meta = document.querySelector(`meta[${attribute}="${property}"]`);
-                if (!meta) {
-                    meta = document.createElement('meta');
-                    meta.setAttribute(attribute, property);
-                    document.head.appendChild(meta);
-                }
-                meta.setAttribute('content', content);
+            const removeExistingMeta = (selector) => {
+                const existing = document.querySelectorAll(selector);
+                existing.forEach(tag => tag.remove());
             };
 
-            // Basic meta tags
-            updateMetaTag('description', courseData.description);
-            
-            // Open Graph tags
-            updateMetaTag('og:title', courseData.title, true);
-            updateMetaTag('og:description', courseData.description, true);
-            updateMetaTag('og:image', courseImage, true);
-            updateMetaTag('og:url', currentUrl, true);
-            updateMetaTag('og:type', 'website', true);
-            updateMetaTag('og:site_name', 'SocialPrachar', true);
-            
-            // Twitter Card tags
-            updateMetaTag('twitter:card', 'summary_large_image');
-            updateMetaTag('twitter:title', courseData.title);
-            updateMetaTag('twitter:description', courseData.description);
-            updateMetaTag('twitter:image', courseImage);
-            updateMetaTag('twitter:site', '@SocialPrachar');
-            
-            // Additional meta tags
-            updateMetaTag('og:image:width', '1200', true);
-            updateMetaTag('og:image:height', '630', true);
-            updateMetaTag('og:image:alt', courseData.title, true);
-            
-            // Update canonical link
+            removeExistingMeta('meta[property^="og:"]');
+            removeExistingMeta('meta[name^="twitter:"]');
+            removeExistingMeta('meta[name="description"]');
+
+            document.title = courseData.title;
+
+            const createMetaTag = (attribute, name, content) => {
+                const meta = document.createElement('meta');
+                meta.setAttribute(attribute, name);
+                meta.setAttribute('content', content);
+                document.head.appendChild(meta);
+                return meta;
+            };
+
+            createMetaTag('name', 'description', courseData.description);
+            createMetaTag('name', 'keywords', `${courseData.title}, online course, training, SocialPrachar, Hyderabad`);
+
+            createMetaTag('property', 'og:title', courseData.title);
+            createMetaTag('property', 'og:description', courseData.description);
+            createMetaTag('property', 'og:image', courseImage);
+            createMetaTag('property', 'og:image:secure_url', courseImage);
+            createMetaTag('property', 'og:url', currentUrl);
+            createMetaTag('property', 'og:type', 'website');
+            createMetaTag('property', 'og:site_name', 'SocialPrachar');
+            createMetaTag('property', 'og:image:width', '1200');
+            createMetaTag('property', 'og:image:height', '630');
+            createMetaTag('property', 'og:image:alt', courseData.title);
+            createMetaTag('property', 'og:locale', 'en_US');
+
+            createMetaTag('name', 'twitter:card', 'summary_large_image');
+            createMetaTag('name', 'twitter:site', '@SocialPrachar');
+            createMetaTag('name', 'twitter:creator', '@SocialPrachar');
+            createMetaTag('name', 'twitter:title', courseData.title);
+            createMetaTag('name', 'twitter:description', courseData.description);
+            createMetaTag('name', 'twitter:image', courseImage);
+            createMetaTag('name', 'twitter:image:alt', courseData.title);
+
+            createMetaTag('property', 'article:author', 'SocialPrachar');
+            createMetaTag('property', 'article:publisher', 'https://www.facebook.com/SocialPrachar');
+
             let canonical = document.querySelector('link[rel="canonical"]');
-            if (!canonical) {
-                canonical = document.createElement('link');
-                canonical.setAttribute('rel', 'canonical');
-                document.head.appendChild(canonical);
-            }
+            if (canonical) canonical.remove();
+            canonical = document.createElement('link');
+            canonical.setAttribute('rel', 'canonical');
             canonical.setAttribute('href', currentUrl);
+            document.head.appendChild(canonical);
         }
     }, [courseData, currentUrl, courseImage]);
 
@@ -201,90 +206,89 @@ const ShareButton = ({ courseData, currentUrl, courseImage }) => {
         const encodedUrl = encodeURIComponent(shareData.url);
         const encodedTitle = encodeURIComponent(shareData.title);
         const encodedDescription = encodeURIComponent(shareData.description);
-        
+
         let shareUrl = '';
-        
+        let windowFeatures = 'width=626,height=436,scrollbars=yes,resizable=yes,toolbar=no,menubar=no';
+
         switch (platform) {
             case 'facebook':
-                shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedTitle}`;
+                shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&title=${encodedTitle}`;
                 break;
+
             case 'twitter':
-                shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}&via=SocialPrachar`;
+                const twitterText = shareData.title.length > 200 ?
+                    shareData.title.substring(0, 200) + '...' : shareData.title;
+                shareUrl = `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodeURIComponent(twitterText)}&via=SocialPrachar&hashtags=OnlineLearning,CourseTraining`;
                 break;
+
             case 'linkedin':
-                shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}&title=${encodedTitle}&summary=${encodedDescription}`;
+                shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`;
                 break;
+
             case 'whatsapp':
-                shareUrl = `https://wa.me/?text=${encodedTitle}%20${encodedUrl}`;
+                shareUrl = `https://wa.me/?text=${encodedUrl}`;
                 break;
-            case 'telegram':
-                shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${encodedTitle}`;
-                break;
-            case 'email':
-                shareUrl = `mailto:?subject=${encodedTitle}&body=${encodedDescription}%0A%0A${encodedUrl}`;
-                break;
+
+            case 'instagram':
+                const instagramText = `🎓 ${shareData.title}\n\n📚 ${shareData.description}\n\n🔗 Link in bio or stories!\n\n#OnlineLearning #SocialPrachar #CourseTraining`;
+                handleCopyLink(instagramText, 'Instagram Story content copied! Paste in your Instagram app.');
+                return;
+
             default:
                 return;
         }
-        
-        if (platform === 'email') {
-            window.location.href = shareUrl;
-        } else {
-            window.open(shareUrl, '_blank', 'width=600,height=400,scrollbars=yes,resizable=yes');
-        }
-        
+
+        window.open(shareUrl, '_blank', windowFeatures);
         setShowShareMenu(false);
     };
 
-    const handleCopyLink = async () => {
+    const handleCopyLink = async (customText = null, successMessage = null) => {
+        const textToCopy = customText || shareData.url;
+        const message = successMessage || (customText ? 'Content copied to clipboard!' : 'Link copied to clipboard!');
+
         try {
-            await navigator.clipboard.writeText(shareData.url);
+            await navigator.clipboard.writeText(textToCopy);
             setCopySuccess(true);
-            setTimeout(() => setCopySuccess(false), 2000);
+            setTimeout(() => setCopySuccess(false), 3000);
+            alert(message);
         } catch (err) {
-            console.error('Failed to copy link:', err);
-            // Fallback for older browsers
-            const textArea = document.createElement('textarea');
-            textArea.value = shareData.url;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            textArea.style.top = '-999999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                setCopySuccess(true);
-                setTimeout(() => setCopySuccess(false), 2000);
-            } catch (fallbackErr) {
-                console.error('Fallback copy failed:', fallbackErr);
-            }
-            document.body.removeChild(textArea);
+            console.error('Failed to copy:', err);
+            alert('Failed to copy. Please manually copy the link: ' + shareData.url);
         }
+
         setShowShareMenu(false);
     };
 
-    const handleNativeShare = async () => {
-        if (navigator.share) {
-            try {
-                await navigator.share({
-                    title: shareData.title,
-                    text: shareData.description,
-                    url: shareData.url,
-                });
-                setShowShareMenu(false);
-            } catch (err) {
-                if (err.name !== 'AbortError') {
-                    console.error('Error sharing:', err);
-                }
-            }
-        }
+    const handleInstagramShare = () => {
+        const instagramContent = `🎓 ${shareData.title}
+
+📚 ${shareData.description}
+
+🌟 Join thousands of learners at SocialPrachar!
+🔗 ${shareData.url}
+
+#OnlineLearning #SocialPrachar #CourseTraining #SkillDevelopment #CareerGrowth`;
+
+        handleCopyLink(instagramContent, 'Instagram Story content copied! Paste in your Instagram app.');
     };
 
-    // Close menu when clicking outside
+    const handleWhatsAppCopy = () => {
+        const whatsappMessage = `🎓 *${shareData.title}*
+
+📚 ${shareData.description}
+
+🚀 Transform your career with expert-led training!
+
+👉 ${shareData.url}
+
+#SocialPrachar #OnlineLearning`;
+
+        handleCopyLink(whatsappMessage, 'WhatsApp message copied! Paste it in your chat.');
+    };
+
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (showShareMenu && !event.target.closest(`.${style.shareButtonContainer}`)) {
+            if (showShareMenu && !event.target.closest('.share-button-container')) {
                 setShowShareMenu(false);
             }
         };
@@ -294,81 +298,269 @@ const ShareButton = ({ courseData, currentUrl, courseImage }) => {
     }, [showShareMenu]);
 
     return (
-        <div className={style.shareButtonContainer}>
-            <button 
-                className={style.shareButton}
+        <div
+            className="share-button-container"
+            style={{
+                position: 'absolute',
+                top: '15px',
+                right: '15px',
+                zIndex: 1000
+            }}
+        >
+            <button
                 onClick={() => setShowShareMenu(!showShareMenu)}
                 aria-label="Share course"
                 title="Share this course"
+                style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '50%',
+                    border: 'none',
+                    backgroundColor: '#007bff',
+                    color: 'white',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                    e.target.style.transform = 'scale(1.05)';
+                }}
+                onMouseLeave={(e) => {
+                    e.target.style.transform = 'scale(1)';
+                }}
             >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92s2.92-1.31 2.92-2.92-1.31-2.92-2.92-2.92z" fill="currentColor"/>
-                </svg>
+                <Share2 size={20} />
             </button>
-            
+
             {showShareMenu && (
-                <div className={style.shareMenu}>
-                    <div className={style.shareMenuHeader}>
-                        <h4>Share Course</h4>
-                        <button 
-                            className={style.closeShareMenu}
-                            onClick={() => setShowShareMenu(false)}
-                            aria-label="Close share menu"
+                <>
+                    <div
+                        className="position-fixed"
+                        style={{
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                            zIndex: 999
+                        }}
+                        onClick={() => setShowShareMenu(false)}
+                    />
+                    <div
+                        className="card shadow-lg"
+                        style={{
+                            position: 'absolute',
+                            top: '50px',
+                            right: '0',
+                            width: '250px',
+                            zIndex: 1001,
+                            borderRadius: '8px',
+                            border: 'none',
+                            backgroundColor: 'white',
+                            fontFamily: 'Arial, sans-serif'
+                        }}
+                    >
+                        <div
+                            className="card-header d-flex justify-content-between align-items-center"
+                            style={{
+                                borderRadius: '8px 8px 0 0',
+                                padding: '10px',
+                                borderBottom: '1px solid #e0e0e0'
+                            }}
                         >
-                            ×
-                        </button>
-                    </div>
-                    
-                    <div className={style.shareOptions}>
-                        {navigator.share && (
-                            <button className={style.shareOption} onClick={handleNativeShare}>
-                                <span className={style.shareIcon}>📱</span>
-                                <span>Share</span>
+                            <h6 className="mb-0 fw-bold">
+                                Share Course
+                            </h6>
+                            <button
+                                onClick={() => setShowShareMenu(false)}
+                                style={{
+                                    width: '20px',
+                                    height: '20px',
+                                    padding: '0',
+                                    borderRadius: '50%',
+                                    border: 'none',
+                                    backgroundColor: 'transparent',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                ×
                             </button>
-                        )}
-                        
-                        <button className={style.shareOption} onClick={() => handleShare('facebook')}>
-                            <span className={style.shareIcon}>📘</span>
-                            <span>Facebook</span>
-                        </button>
-                        
-                        <button className={style.shareOption} onClick={() => handleShare('twitter')}>
-                            <span className={style.shareIcon}>🐦</span>
-                            <span>Twitter</span>
-                        </button>
-                        
-                        <button className={style.shareOption} onClick={() => handleShare('linkedin')}>
-                            <span className={style.shareIcon}>💼</span>
-                            <span>LinkedIn</span>
-                        </button>
-                        
-                        <button className={style.shareOption} onClick={() => handleShare('whatsapp')}>
-                            <span className={style.shareIcon}>💬</span>
-                            <span>WhatsApp</span>
-                        </button>
-                        
-                        <button className={style.shareOption} onClick={() => handleShare('telegram')}>
-                            <span className={style.shareIcon}>✈️</span>
-                            <span>Telegram</span>
-                        </button>
-                        
-                        <button className={style.shareOption} onClick={() => handleShare('email')}>
-                            <span className={style.shareIcon}>📧</span>
-                            <span>Email</span>
-                        </button>
-                        
-                        <button 
-                            className={`${style.shareOption} ${copySuccess ? style.copied : ''}`} 
-                            onClick={handleCopyLink}
-                        >
-                            <span className={style.shareIcon}>📋</span>
-                            <span>{copySuccess ? 'Copied!' : 'Copy Link'}</span>
-                        </button>
+                        </div>
+
+                        <div className="card-body p-0">
+                            <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                                <li
+                                    onClick={() => handleShare('facebook')}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        padding: '10px',
+                                        cursor: 'pointer',
+                                        borderBottom: '1px solid #e0e0e0'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                                >
+                                    <Facebook size={24} color="#1877F2" style={{ marginRight: '10px' }} />
+                                    <span>Facebook</span>
+                                </li>
+                                <li
+                                    onClick={() => handleShare('twitter')}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        padding: '10px',
+                                        cursor: 'pointer',
+                                        borderBottom: '1px solid #e0e0e0'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                                >
+                                    <Twitter size={24} color="#1DA1F2" style={{ marginRight: '10px' }} />
+                                    <span>Twitter</span>
+                                </li>
+                                <li
+                                    onClick={() => handleShare('linkedin')}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        padding: '10px',
+                                        cursor: 'pointer',
+                                        borderBottom: '1px solid #e0e0e0'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                                >
+                                    <Linkedin size={24} color="#0A66C2" style={{ marginRight: '10px' }} />
+                                    <span>LinkedIn</span>
+                                </li>
+                                <li
+                                    onClick={() => handleShare('whatsapp')}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        padding: '10px',
+                                        cursor: 'pointer',
+                                        borderBottom: '1px solid #e0e0e0'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                                >
+                                    <svg width="24" height="24" viewBox="0 0 24 24" style={{ marginRight: '10px' }} fill="#25D366" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M12 0C5.373 0 0 5.373 0 12c0 2.134.558 4.216 1.62 6.04L0 24l6.04-1.62C7.864 23.442 9.946 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.955 0-3.87-.586-5.508-1.69l-.388-.23-3.576.958.958-3.576-.23-.388C2.146 15.87 1.5 13.955 1.5 12c0-5.79 4.71-10.5 10.5-10.5S22.5 6.21 22.5 12 17.79 22.5 12 22zm5.015-5.986c-.285-.142-1.686-.835-1.948-.93-.262-.095-.452-.142-.642.142-.19.285-.738.93-.904 1.12-.166.19-.332.214-.617.071-.285-.142-1.202-.443-2.29-1.413-.846-.754-1.417-1.686-1.583-1.971-.166-.285-.017-.44.125-.582.128-.127.285-.332.428-.498.142-.166.19-.285.285-.476.095-.19.047-.356-.024-.498-.071-.142-.642-1.548-.88-2.12-.237-.57-.475-.475-.642-.475-.166 0-.332 0-.498 0s-.428.047-.642.214c-.214.166-1.378.476-1.378 1.162 0 .686.998 1.353 1.14 1.448.142.095 1.995 3.043 4.836 4.27.475.214.846.332 1.14.428.475.166 1.14.142 1.583.071.428-.071 1.353-.57 1.548-1.12.19-.57.19-.998.142-1.092-.047-.095-.104-.166-.19-.309z" />
+                                    </svg>
+                                    <span>WhatsApp</span>
+                                </li>
+                                <li
+                                    onClick={() => handleInstagramShare()}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        padding: '10px',
+                                        cursor: 'pointer',
+                                        borderBottom: '1px solid #e0e0e0'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                                >
+                                    <Instagram size={24} style={{ marginRight: '10px', color: '#E4405F' }} />
+                                    <span>Instagram Story</span>
+                                </li>
+                                <li
+                                    onClick={() => handleCopyLink()}
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        padding: '10px',
+                                        cursor: 'pointer'
+                                    }}
+                                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f5f5f5'}
+                                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'white'}
+                                >
+                                    <Copy size={24} color="#666" style={{ marginRight: '10px' }} />
+                                    <span>Copy Link</span>
+                                </li>
+                            </ul>
+                            <div
+                                className="p-3 border-top"
+                                style={{
+                                    backgroundColor: '',
+                                    borderRadius: '0 0 8px 8px'
+                                }}
+                            >
+                                <div className="mb-2">
+                                    <p className='text-center'>Copy Rich Content:</p>
+                                </div>
+                                <div className="d-flex flex-column gap-2">
+                                    <button
+                                        onClick={handleInstagramShare}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            backgroundColor: 'white',
+                                            color: '#E4405F',
+                                            fontSize: '12px',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s ease',
+                                            border: '2px solid transparent',
+                                            padding: '8px',
+                                            width: '100%'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.target.style.backgroundColor = '#E4405F';
+                                            e.target.style.color = 'white';
+                                            e.target.style.border = '2px solid #E4405F';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.target.style.backgroundColor = 'white';
+                                            e.target.style.color = '#E4405F';
+                                            e.target.style.border = '2px solid transparent';
+                                        }}
+                                    >
+                                        <Instagram size={24} style={{ marginRight: '5px' }} />
+                                    </button>
+                                    <button
+                                        onClick={handleWhatsAppCopy}
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            backgroundColor: 'white',
+                                            color: '#25D366',
+                                            fontSize: '12px',
+                                            cursor: 'pointer',
+                                            transition: 'all 0.3s ease',
+                                            border: '2px solid transparent',
+                                            padding: '8px',
+                                            width: '100%'
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.target.style.backgroundColor = '#25D366';
+                                            e.target.style.color = 'white';
+                                            e.target.style.border = '2px solid #25D366';
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.target.style.backgroundColor = 'white';
+                                            e.target.style.color = '#25D366';
+                                            e.target.style.border = '2px solid transparent';
+                                        }}
+                                    >
+                                        <svg width="25" height="25" viewBox="0 0 24 24" style={{ marginRight: '5px' }} fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M12 0C5.373 0 0 5.373 0 12c0 2.134.558 4.216 1.62 6.04L0 24l6.04-1.62C7.864 23.442 9.946 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-1.955 0-3.87-.586-5.508-1.69l-.388-.23-3.576.958.958-3.576-.23-.388C2.146 15.87 1.5 13.955 1.5 12c0-5.79 4.71-10.5 10.5-10.5S22.5 6.21 22.5 12 17.79 22.5 12 22zm5.015-5.986c-.285-.142-1.686-.835-1.948-.93-.262-.095-.452-.142-.642.142-.19.285-.738.93-.904 1.12-.166.19-.332.214-.617.071-.285-.142-1.202-.443-2.29-1.413-.846-.754-1.417-1.686-1.583-1.971-.166-.285-.017-.44.125-.582.128-.127.285-.332.428-.498.142-.166.19-.285.285-.476.095-.19.047-.356-.024-.498-.071-.142-.642-1.548-.88-2.12-.237-.57-.475-.475-.642-.475-.166 0-.332 0-.498 0s-.428.047-.642.214c-.214.166-1.378.476-1.378 1.162 0 .686.998 1.353 1.14 1.448.142.095 1.995 3.043 4.836 4.27.475.214.846.332 1.14.428.475.166 1.14.142 1.583.071.428-.071 1.353-.57 1.548-1.12.19-.57.19-.998.142-1.092-.047-.095-.104-.166-.19-.309z" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                </div>
+                </>
             )}
-            
-            {showShareMenu && <div className={style.shareOverlay} onClick={() => setShowShareMenu(false)} />}
         </div>
     );
 };
@@ -380,7 +572,6 @@ const Headerpart = (courseID) => {
     const doughtsPartRef = useRef(null);
     const [isPopupVisible, setIsPopupVisible] = useState(false);
 
-    // Get current URL and course metadata
     const currentUrl = window.location.href;
     const currentPath = window.location.pathname;
     const courseData = courseMetadata[currentPath] || courseMetadata[`/${slug}`];
@@ -390,7 +581,6 @@ const Headerpart = (courseID) => {
         setCard(cardDetails);
     }, [slug]);
 
-    // below the screen size
     const [isMobile, setIsMobile] = useState(window.innerWidth < 1025);
     useEffect(() => {
         const handleResize = () => setIsMobile(window.innerWidth < 1025);
@@ -444,14 +634,13 @@ const Headerpart = (courseID) => {
                 height="800"
                 className={style.backgroundImage}
             />
-            
-            {/* Share Button */}
-            <ShareButton 
-                courseData={courseData} 
-                currentUrl={currentUrl} 
+
+            <ShareButton
+                courseData={courseData}
+                currentUrl={currentUrl}
                 courseImage={JD_course}
             />
-            
+
             <div className={style.contentContainer}>
                 <div className={style.symbolsContainer}>
                     <h3 className={style.headerText}>
@@ -510,14 +699,13 @@ const Headerpart = (courseID) => {
                 </div>
             </div>
 
-            <div className={style.testimonials}>
+             <div className={style.testimonials}>
                 <div className={`d-flex m-4 ${isMobile ? 'flex-column text-center' : 'justify-content-center align-items-center gap-2'}`}>
-                    <h3 className="fw-bold">Results  That 
+                    <h4 className="fw-bold">Results That 
                         <span style={{ color: '#ff5003' }}> Speak Louder </span> Than  <span style={{ color: '#ff5003' }}>Words</span>     
-                    </h3>
+                    </h4>
                 </div>
                 <div className="container">
-                    {/* Ratings Section */}
                     <div className="row text-center mb-4">
                         {ratings.map((item, index) => (
                             <div className="col-md-4 mb-3" key={index}>
@@ -544,7 +732,6 @@ const Headerpart = (courseID) => {
                         ))}
                     </div>
 
-                    {/* Stats Section */}
                     <div className="row text-center justify-content-center gap-3">
                         {stats.map((stat, index) => (
                             <div className={`${style.statcard} shadow-sm`} key={index}>
