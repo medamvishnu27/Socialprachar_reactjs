@@ -64,8 +64,8 @@ const SubscriptionHeader = () => {
                                 {displayText} <span style={{ color: '#ff5003' }}>Save 95%</span> with SocialPrachar's Subscription Plan!
                             </h2>
                             <p>
-                                To give students the <span className='fw-bold text-warning'>Freedom to master multiple </span> high-demand skills  under one  affordable fee and  become eligible for more job roles  
-                                <span className='fw-bold'>-without being  limited to just one course.</span>
+                                To give students the <span className='fw-bold text-lg'>Freedom to master multiple </span> high-demand skills  under one  affordable fee and  become eligible for more job roles  
+                                <span className='fw-bold text-lg'>-without being  limited to just one course.</span>
                             </p>
                             <h4 className="py-3" style={{ color: '#443cdf' }}>
                                 <FontAwesomeIcon icon={faTags} className="px-2" />
