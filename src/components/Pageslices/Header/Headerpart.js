@@ -572,7 +572,7 @@ const Headerpart = (courseID) => {
     const doughtsPartRef = useRef(null);
     const [isPopupVisible, setIsPopupVisible] = useState(false);
 
-    const currentUrl = window.location.origin + '/share' + window.location.pathname;
+    const currentUrl = window.location.href;
     const currentPath = window.location.pathname;
     const courseData = courseMetadata[currentPath] || courseMetadata[`/${slug}`];
 
