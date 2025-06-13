@@ -1,19 +1,20 @@
 // Import the functions you need from the SDKs you need
+require('dotenv').config();
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
-import { getStorage} from 'firebase/storage';
+import { getStorage } from 'firebase/storage';
 import { addDoc } from "firebase/firestore";
 import { collection } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCABB8nNadEcaA3OPzYs2oz8RbpYav5opE",
-  authDomain: "dashboard-4c24f.firebaseapp.com",
-  projectId: "dashboard-4c24f",
-  storageBucket: "dashboard-4c24f.appspot.com",
-  messagingSenderId: "908699037540",
-  appId: "1:908699037540:web:d9a2c71b987eeb76b0d471",
-  measurementId: "G-9ZG6113LT5"
+  apiKey: process.env.FIREBASE_API_KEY, // Accessing the API key from environment variables
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID, // Use process.env
+  appId: process.env.FIREBASE_APP_ID, // Use process.env
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID // Use process.env
 };
 
 // Initialize Firebase
@@ -22,4 +23,10 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
-export {collection, addDoc } ;
+export { collection, addDoc };
+
+
+
+
+
+
