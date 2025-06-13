@@ -115,6 +115,54 @@ const courseMetaData = {
     twitterTitle: 'AWS DevOps Training Hyderabad | Master CI/CD, Docker, Kubernetes with Job Guarantee',
     twitterDescription: 'Transform your career with SocialPrachar\'s AWS DevOps course in Hyderabad. Learn cloud automation, deployment strategies, and modern DevOps practices with expert guidance and placement support.',
     author: 'Social Prachar DevOps Team'
+  },
+  'generative-ai-course-training-institute-hyderabad': {
+    title: 'Best Generative AI Course Training Institute in Hyderabad | Social Prachar',
+    description: 'Master Generative AI with SocialPrachar\'s comprehensive course in Hyderabad. Learn advanced AI techniques, including GANs and LLMs, with real-time projects and placement guarantee. Join the top AI training institute in Hyderabad.',
+    keywords: 'generative ai course hyderabad, ai training, machine learning course, GANs training, LLM training, hyderabad ai training',
+    ogTitle: 'Generative AI Course in Hyderabad – Advanced AI Training | Social Prachar',
+    ogDescription: 'Launch your AI career with SocialPrachar\'s Generative AI course in Hyderabad. Master cutting-edge AI technologies like GANs and LLMs with expert trainers and job placement.',
+    ogUrl: 'https://socialprachar.com/generative-ai-course-training-institute-hyderabad',
+    ogImage: 'https://socialprachar.com/courses/generative-ai-course.png',
+    twitterTitle: 'Generative AI Training Hyderabad | Master GANs, LLMs with Job Guarantee',
+    twitterDescription: 'Shape the future with SocialPrachar\'s Generative AI course in Hyderabad. Learn from experts with real-world projects and career support.',
+    author: 'Social Prachar AI Team'
+  },
+  'data-analytics-course-training-hyderabad': {
+    title: 'Best Data Analytics Course Training Institute in Hyderabad | Social Prachar',
+    description: 'Become a Data Analytics expert with SocialPrachar\'s comprehensive course in Hyderabad. Learn data visualization, SQL, Power BI, and Python with real-time projects and placement guarantee. Join the top data analytics training institute.',
+    keywords: 'data analytics course hyderabad, data visualization training, SQL course, power bi training, python analytics, hyderabad data analytics',
+    ogTitle: 'Data Analytics Course in Hyderabad – SQL, Power BI, Python | Social Prachar',
+    ogDescription: 'Kickstart your career in data analytics with SocialPrachar\'s course in Hyderabad. Master tools like SQL, Power BI, and Python with hands-on projects and job placement support.',
+    ogUrl: 'https://socialprachar.com/data-analytics-course-training-hyderabad',
+    ogImage: 'https://socialprachar.com/courses/data-analytics-course.png',
+    twitterTitle: 'Data Analytics Training Hyderabad | Master SQL, Power BI with Job Guarantee',
+    twitterDescription: 'Build your data analytics career with SocialPrachar\'s course in Hyderabad. Learn from industry experts with real-world projects and placement support.',
+    author: 'Social Prachar Data Analytics Team'
+  },
+  'snowflake-training-in-hyderabad': {
+    title: 'Best Snowflake Training Institute in Hyderabad | Social Prachar',
+    description: 'Master Snowflake data warehousing with SocialPrachar\'s expert-led course in Hyderabad. Learn cloud data management, ETL processes, and analytics with real-time projects and placement guarantee.',
+    keywords: 'snowflake training hyderabad, cloud data warehouse, ETL training, snowflake certification, data analytics course, hyderabad snowflake',
+    ogTitle: 'Snowflake Training in Hyderabad – Cloud Data Warehousing | Social Prachar',
+    ogDescription: 'Advance your career with SocialPrachar\'s Snowflake training in Hyderabad. Learn cloud data management and analytics with hands-on projects and job placement.',
+    ogUrl: 'https://socialprachar.com/snowflake-training-in-hyderabad',
+    ogImage: 'https://socialprachar.com/courses/snowflake-course.png',
+    twitterTitle: 'Snowflake Training Hyderabad | Master Cloud Data Warehousing with Job Support',
+    twitterDescription: 'Learn Snowflake with SocialPrachar\'s industry-focused course in Hyderabad. Master cloud data solutions with expert guidance and placement support.',
+    author: 'Social Prachar Snowflake Team'
+  },
+  'salesforce-course': {
+    title: 'Best Salesforce Course Training Institute in Hyderabad | Social Prachar',
+    description: 'Master Salesforce with SocialPrachar\'s comprehensive course in Hyderabad. Learn CRM, Apex, Visualforce, and Lightning with real-time projects and placement guarantee. Join the top Salesforce training institute.',
+    keywords: 'salesforce course hyderabad, CRM training, apex training, visualforce course, lightning training, salesforce certification hyderabad',
+    ogTitle: 'Salesforce Course in Hyderabad – CRM, Apex, Lightning Training | Social Prachar',
+    ogDescription: 'Launch your Salesforce career with SocialPrachar\'s course in Hyderabad. Master CRM development and administration with expert trainers and job placement support.',
+    ogUrl: 'https://socialprachar.com/salesforce-course',
+    ogImage: 'https://socialprachar.com/courses/salesforce-course.png',
+    twitterTitle: 'Salesforce Training Hyderabad | Master CRM, Apex with Job Guarantee',
+    twitterDescription: 'Build your Salesforce career with SocialPrachar\'s course in Hyderabad. Learn from experts with real-world projects and guaranteed placement.',
+    author: 'Social Prachar Salesforce Team'
   }
 };
 
@@ -131,6 +179,9 @@ const defaultMetaData = {
   twitterDescription: 'Join SocialPrachar for industry-leading training in technology and digital marketing. Expert mentors, real-time projects, and placement support in Hyderabad.',
   author: 'Social Prachar Team'
 };
+
+// Export courseMetaData and defaultMetaData for use in other components
+export { courseMetaData, defaultMetaData };
 
 // Function to get meta data based on current route
 const getMetaData = (pathname) => {
@@ -251,7 +302,7 @@ const DynamicMetaTags = ({ location }) => {
         linkTag = document.createElement('link');
         linkTag.setAttribute('rel', rel);
         linkTag.setAttribute('href', href);
-        document.head.appendChild(linkTag);
+        document.head.appendChild(linkTag); // Fixed typo: Changed metaTag to linkTag
       }
     };
 

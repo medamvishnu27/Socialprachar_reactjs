@@ -180,7 +180,7 @@ const PrivacyPolicy = () => {
 
                     <h2 className='fw-bold'>Contact Us</h2>
                     <p>If you have any questions about this Privacy Policy, You can contact us:</p>
-                    <li>By visiting this page on our website: <a href="https://socialprachar.com/upcoming-batches/" target="_blank"> https://socialprachar.com/upcoming-batches/</a>.</li>
+                    <li>By visiting this page on our website: <a href="https://socialprachar.com/upcoming-batches/" target="_blank" rel="noreferrer"> https://socialprachar.com/upcoming-batches/</a>.</li>
                 </div>
             </div>
             <Footer/>
