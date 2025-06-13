@@ -1,5 +1,6 @@
 import React, { useEffect, useState, Suspense } from 'react';
 import { BrowserRouter, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
+import { StaticRouter } from 'react-router-dom/server';
 import { auth } from './firebase';
 import NavBar from './components/navBarComponent/navBar';
 import ScrollToTop from './components/extraComponents/ScrollToTop.js';
@@ -21,7 +22,7 @@ import { Helmet, HelmetProvider } from 'react-helmet-async';
 // Enhanced Course Meta Data Configuration
 const courseMetaData = {
   'data-science': {
-    title: 'Best Data Science Course Training Institute in Hyderabad | Social Prachar',
+    title: 'Top Choice Data Science Course Training Institute in Hyderabad | Social Prachar',
     description: 'Join SocialPrachar\'s top-rated Data Science course with AI & ML in Hyderabad. Get hands-on training, real-time projects, placement support, and industry certifications. Transform your career with our expert-led program. Enroll now for the best Data Science training in Hyderabad!',
     keywords: 'data science course hyderabad, AI ML training, python data science, machine learning course, data analytics training, placement guarantee hyderabad',
     ogTitle: 'Best Data Science Course with AI & ML Training in Hyderabad | Social Prachar',
@@ -33,7 +34,7 @@ const courseMetaData = {
     author: 'Social Prachar Data Science Team'
   },
   'full-stack-developer-course': {
-    title: 'Best MERN Full Stack Developer Course Training Institute in Hyderabad | Social Prachar',
+    title: 'Top Choice MERN Full Stack Developer Course Training Institute in Hyderabad | Social Prachar',
     description: 'Master Full Stack Development with SocialPrachar\'s expert-led MERN stack course in Hyderabad. Learn React, Node.js, MongoDB, Express.js with real-time projects and guaranteed placement. Join the top Full Stack Development training institute in Hyderabad for comprehensive web development skills.',
     keywords: 'full stack developer course hyderabad, MERN stack training, react js course, node js training, web development course, javascript training hyderabad',
     ogTitle: 'Full Stack Developer Course in Hyderabad – MERN, Java & Python | Social Prachar',
@@ -45,7 +46,7 @@ const courseMetaData = {
     author: 'Social Prachar Full Stack Team'
   },
   'aws-devops-course': {
-    title: 'Best AWS DevOps Course Training Institute in Hyderabad | Social Prachar',
+    title: 'Top Choice AWS DevOps Course Training Institute in Hyderabad | Social Prachar',
     description: 'Master AWS DevOps with SocialPrachar\'s expert-led course in Hyderabad. Learn CI/CD, Docker, Kubernetes, Jenkins, AWS cloud services with real-time projects and placement guarantee. Join the leading DevOps training institute in Hyderabad for comprehensive cloud and automation skills.',
     keywords: 'aws devops course hyderabad, docker kubernetes training, jenkins ci/cd, cloud computing course, devops certification hyderabad, aws training',
     ogTitle: 'AWS DevOps Course in Hyderabad – CI/CD, Docker, Kubernetes | Social Prachar',
@@ -57,7 +58,7 @@ const courseMetaData = {
     author: 'Social Prachar DevOps Team'
   },
   'artificial-intelligence-course-training-institute-in-hyderabad': {
-    title: 'Best Artificial Intelligence Course Training Institute in Hyderabad | Social Prachar',
+    title: 'Top Choice Artificial Intelligence Course Training Institute in Hyderabad | Social Prachar',
     description: 'Master Artificial Intelligence with SocialPrachar\'s comprehensive AI course in Hyderabad. Learn Machine Learning, Deep Learning, NLP, Computer Vision, Python programming with real-time AI projects and placement guarantee. Join the top AI training institute in Hyderabad.',
     keywords: 'artificial intelligence course hyderabad, machine learning training, deep learning course, NLP training, computer vision course, AI certification hyderabad',
     ogTitle: 'Artificial Intelligence Course in Hyderabad – ML, DL, NLP Training | Social Prachar',
@@ -69,7 +70,7 @@ const courseMetaData = {
     author: 'Social Prachar AI Team'
   },
   'digital-marketing-course-training-institute-hyderabad': {
-    title: 'Best Digital Marketing Course Training Institute in Hyderabad | Social Prachar',
+    title: 'Top Choice Digital Marketing Course Training Institute in Hyderabad | Social Prachar',
     description: 'Master Digital Marketing with SocialPrachar\'s comprehensive course in Hyderabad. Learn SEO, Google Ads, Facebook Ads, Social Media Marketing, Content Marketing, Email Marketing with real campaigns and placement guarantee. Join the top digital marketing institute in Hyderabad.',
     keywords: 'digital marketing course hyderabad, SEO training, google ads course, social media marketing, facebook ads training, content marketing course hyderabad',
     ogTitle: 'Digital Marketing Course in Hyderabad – SEO, Google Ads, Social Media | Social Prachar',
@@ -81,7 +82,7 @@ const courseMetaData = {
     author: 'Social Prachar Digital Marketing Team'
   },
   'python-full-stack-development-course': {
-    title: 'Best Python Full Stack Development Course in Hyderabad | Social Prachar',
+    title: 'Top Choice Python Full Stack Development Course in Hyderabad | Social Prachar',
     description: 'Become a Python Full Stack Developer with SocialPrachar\'s comprehensive course in Hyderabad. Learn Django, Flask, React, databases, APIs with real-time projects and placement support. Master both frontend and backend Python development at the leading training institute.',
     keywords: 'python full stack course hyderabad, django training, flask course, python web development, backend development course, python training hyderabad',
     ogTitle: 'Python Full Stack Developer Course in Hyderabad – Django, React, APIs | Social Prachar',
@@ -93,7 +94,7 @@ const courseMetaData = {
     author: 'Social Prachar Python Team'
   },
   'java-full-stack-development-course': {
-    title: 'Best Java Full Stack Development Course in Hyderabad | Social Prachar',
+    title: 'Top Choice Java Full Stack Development Course in Hyderabad | Social Prachar',
     description: 'Master Java Full Stack Development with SocialPrachar\'s comprehensive course in Hyderabad. Learn Core Java, Spring Boot, Hibernate, React, Angular, microservices with real-time projects and placement guarantee. Join the top Java training institute in Hyderabad.',
     keywords: 'java full stack course hyderabad, spring boot training, hibernate course, java web development, microservices training, java certification hyderabad',
     ogTitle: 'Java Full Stack Developer Course in Hyderabad – Spring Boot, React, Microservices | Social Prachar',
@@ -105,7 +106,7 @@ const courseMetaData = {
     author: 'Social Prachar Java Team'
   },
   'awsdevopscourse': {
-    title: 'Best AWS DevOps Course Training Institute in Hyderabad | Social Prachar',
+    title: 'Top Choice AWS DevOps Course Training Institute in Hyderabad | Social Prachar',
     description: 'Master AWS DevOps with SocialPrachar\'s expert-led course in Hyderabad. Learn CI/CD, Docker, Kubernetes, Jenkins, AWS cloud services with real-time projects and placement guarantee. Join the leading DevOps training institute in Hyderabad for comprehensive cloud and automation skills.',
     keywords: 'aws devops course hyderabad, docker kubernetes training, jenkins ci/cd, cloud computing course, devops certification hyderabad, aws training',
     ogTitle: 'AWS DevOps Course in Hyderabad – CI/CD, Docker, Kubernetes | Social Prachar',
@@ -115,54 +116,6 @@ const courseMetaData = {
     twitterTitle: 'AWS DevOps Training Hyderabad | Master CI/CD, Docker, Kubernetes with Job Guarantee',
     twitterDescription: 'Transform your career with SocialPrachar\'s AWS DevOps course in Hyderabad. Learn cloud automation, deployment strategies, and modern DevOps practices with expert guidance and placement support.',
     author: 'Social Prachar DevOps Team'
-  },
-  'generative-ai-course-training-institute-hyderabad': {
-    title: 'Best Generative AI Course Training Institute in Hyderabad | Social Prachar',
-    description: 'Master Generative AI with SocialPrachar\'s comprehensive course in Hyderabad. Learn advanced AI techniques, including GANs and LLMs, with real-time projects and placement guarantee. Join the top AI training institute in Hyderabad.',
-    keywords: 'generative ai course hyderabad, ai training, machine learning course, GANs training, LLM training, hyderabad ai training',
-    ogTitle: 'Generative AI Course in Hyderabad – Advanced AI Training | Social Prachar',
-    ogDescription: 'Launch your AI career with SocialPrachar\'s Generative AI course in Hyderabad. Master cutting-edge AI technologies like GANs and LLMs with expert trainers and job placement.',
-    ogUrl: 'https://socialprachar.com/generative-ai-course-training-institute-hyderabad',
-    ogImage: 'https://socialprachar.com/courses/generative-ai-course.png',
-    twitterTitle: 'Generative AI Training Hyderabad | Master GANs, LLMs with Job Guarantee',
-    twitterDescription: 'Shape the future with SocialPrachar\'s Generative AI course in Hyderabad. Learn from experts with real-world projects and career support.',
-    author: 'Social Prachar AI Team'
-  },
-  'data-analytics-course-training-hyderabad': {
-    title: 'Best Data Analytics Course Training Institute in Hyderabad | Social Prachar',
-    description: 'Become a Data Analytics expert with SocialPrachar\'s comprehensive course in Hyderabad. Learn data visualization, SQL, Power BI, and Python with real-time projects and placement guarantee. Join the top data analytics training institute.',
-    keywords: 'data analytics course hyderabad, data visualization training, SQL course, power bi training, python analytics, hyderabad data analytics',
-    ogTitle: 'Data Analytics Course in Hyderabad – SQL, Power BI, Python | Social Prachar',
-    ogDescription: 'Kickstart your career in data analytics with SocialPrachar\'s course in Hyderabad. Master tools like SQL, Power BI, and Python with hands-on projects and job placement support.',
-    ogUrl: 'https://socialprachar.com/data-analytics-course-training-hyderabad',
-    ogImage: 'https://socialprachar.com/courses/data-analytics-course.png',
-    twitterTitle: 'Data Analytics Training Hyderabad | Master SQL, Power BI with Job Guarantee',
-    twitterDescription: 'Build your data analytics career with SocialPrachar\'s course in Hyderabad. Learn from industry experts with real-world projects and placement support.',
-    author: 'Social Prachar Data Analytics Team'
-  },
-  'snowflake-training-in-hyderabad': {
-    title: 'Best Snowflake Training Institute in Hyderabad | Social Prachar',
-    description: 'Master Snowflake data warehousing with SocialPrachar\'s expert-led course in Hyderabad. Learn cloud data management, ETL processes, and analytics with real-time projects and placement guarantee.',
-    keywords: 'snowflake training hyderabad, cloud data warehouse, ETL training, snowflake certification, data analytics course, hyderabad snowflake',
-    ogTitle: 'Snowflake Training in Hyderabad – Cloud Data Warehousing | Social Prachar',
-    ogDescription: 'Advance your career with SocialPrachar\'s Snowflake training in Hyderabad. Learn cloud data management and analytics with hands-on projects and job placement.',
-    ogUrl: 'https://socialprachar.com/snowflake-training-in-hyderabad',
-    ogImage: 'https://socialprachar.com/courses/snowflake-course.png',
-    twitterTitle: 'Snowflake Training Hyderabad | Master Cloud Data Warehousing with Job Support',
-    twitterDescription: 'Learn Snowflake with SocialPrachar\'s industry-focused course in Hyderabad. Master cloud data solutions with expert guidance and placement support.',
-    author: 'Social Prachar Snowflake Team'
-  },
-  'salesforce-course': {
-    title: 'Best Salesforce Course Training Institute in Hyderabad | Social Prachar',
-    description: 'Master Salesforce with SocialPrachar\'s comprehensive course in Hyderabad. Learn CRM, Apex, Visualforce, and Lightning with real-time projects and placement guarantee. Join the top Salesforce training institute.',
-    keywords: 'salesforce course hyderabad, CRM training, apex training, visualforce course, lightning training, salesforce certification hyderabad',
-    ogTitle: 'Salesforce Course in Hyderabad – CRM, Apex, Lightning Training | Social Prachar',
-    ogDescription: 'Launch your Salesforce career with SocialPrachar\'s course in Hyderabad. Master CRM development and administration with expert trainers and job placement support.',
-    ogUrl: 'https://socialprachar.com/salesforce-course',
-    ogImage: 'https://socialprachar.com/courses/salesforce-course.png',
-    twitterTitle: 'Salesforce Training Hyderabad | Master CRM, Apex with Job Guarantee',
-    twitterDescription: 'Build your Salesforce career with SocialPrachar\'s course in Hyderabad. Learn from experts with real-world projects and guaranteed placement.',
-    author: 'Social Prachar Salesforce Team'
   }
 };
 
@@ -179,9 +132,6 @@ const defaultMetaData = {
   twitterDescription: 'Join SocialPrachar for industry-leading training in technology and digital marketing. Expert mentors, real-time projects, and placement support in Hyderabad.',
   author: 'Social Prachar Team'
 };
-
-// Export courseMetaData and defaultMetaData for use in other components
-export { courseMetaData, defaultMetaData };
 
 // Function to get meta data based on current route
 const getMetaData = (pathname) => {
@@ -302,7 +252,7 @@ const DynamicMetaTags = ({ location }) => {
         linkTag = document.createElement('link');
         linkTag.setAttribute('rel', rel);
         linkTag.setAttribute('href', href);
-        document.head.appendChild(linkTag); // Fixed typo: Changed metaTag to linkTag
+        document.head.appendChild(linkTag);
       }
     };
 
@@ -491,12 +441,15 @@ const AppContent = () => {
   );
 };
 
-const App = () => {
+const App = ({ location, context }) => {
+  const Router = typeof window === 'undefined' ? StaticRouter : BrowserRouter;
+  const routerProps = typeof window === 'undefined' ? { location, context } : {};
+
   return (
     <HelmetProvider>
-      <BrowserRouter>
+      <Router {...routerProps}>
         <AppContent />
-      </BrowserRouter>
+      </Router>
     </HelmetProvider>
   );
 };
