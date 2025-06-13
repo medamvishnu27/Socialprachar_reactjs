@@ -335,6 +335,18 @@ const NavBar = () => {
                     >
                       courseBlog
                     </NavLink>
+
+                    <NavLink
+                      to="/codeclash"
+                      className="dropdown-item"
+                      onClick={() => {
+                        closeDropdown("dropdown1");
+                        closeToggle();
+                      }}
+                    >
+                      codeclash
+                    </NavLink>
+
                     <NavLink
                       to="/events"
                       className="dropdown-item"

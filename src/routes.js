@@ -24,21 +24,22 @@ const EventsPage = React.lazy(() => (import('./components/events/EventMainPage.j
 const EventOpenPage = React.lazy(() => import("./components/events/EventsOpenpage.js"));
 const DateForms = React.lazy(() => import("./components/Forms/DateInput.js"));
 const DigitalMarketingPageAdd = React.lazy(() => import("./components/digital-marketing-course-training-institute-hyderabad/page.js"));
-const Hosting = React.lazy(()=> import ('./components/hosting/Hosting.js'));
+const Hosting = React.lazy(() => import('./components/hosting/Hosting.js'));
 const CourseBlog = React.lazy(() => import('./components/CourseBlog/Blog.js'));
-const CourseBlogDashBoard = React.lazy(() => import ('./components/CourseBlog/CourseBlogDashboard.js'));
-const OpenCourseBlog = React.lazy(()=> import ("./components/CourseBlog/CourseBlog.js"));
-const OurAchievementsDashboard = React.lazy(() => import ('./components/successStories/OurAchievementsDashboard'));
+const CourseBlogDashBoard = React.lazy(() => import('./components/CourseBlog/CourseBlogDashboard.js'));
+const OpenCourseBlog = React.lazy(() => import("./components/CourseBlog/CourseBlog.js"));
+const OurAchievementsDashboard = React.lazy(() => import('./components/successStories/OurAchievementsDashboard'));
+const CodeClash = React.lazy(() => import('./components/CodeClash/CodeClash.js'))
 
 
 
 const routes = [
     <Route path="/" element={<AllHomeComp />} />,
     <Route path='/datesform' element={<DateForms />} />,
-    <Route path='/courseBlog/:id' element={<OpenCourseBlog/>}/>,
-    <Route path='/OurAchievementsDashboard' element={<OurAchievementsDashboard/>}/>,
-    <Route path='/courseBlogDashboard' element={<CourseBlogDashBoard />}/>,
-    <Route path='/courseBlog' element={<CourseBlog />}/>,
+    <Route path='/courseBlog/:id' element={<OpenCourseBlog />} />,
+    <Route path='/OurAchievementsDashboard' element={<OurAchievementsDashboard />} />,
+    <Route path='/courseBlogDashboard' element={<CourseBlogDashBoard />} />,
+    <Route path='/courseBlog' element={<CourseBlog />} />,
     <Route path='/events/:id' element={<EventOpenPage />} />,
     <Route path='events' element={<EventsPage />} />,
     <Route path="/subscription/:userType" element={<Subscription />} />,
@@ -53,15 +54,16 @@ const routes = [
     <Route path="courses" element={<Course />} />,
     <Route path="aboutUs" element={<Aboutus />} />,
     <Route path=":slug" element={<NewDetailsPage />} />,
-     <Route path="/digital-marketing-course-hyderabad" element={<DigitalMarketingPageAdd />} />,
+    <Route path="/digital-marketing-course-hyderabad" element={<DigitalMarketingPageAdd />} />,
     <Route path="success-stories" element={<SuccessStories />} />,
     <Route path="career-counselling" element={<CareerWorkShop />} />,
     <Route path="upcoming-batches" element={<UpcomingBatches />} />,
     <Route path="career-quiz" element={<CareerSelection />} />,
     <Route path="course/:courseID" element={<CourseAccordion />} />,
     <Route path="thank-you" element={<ThankyouPage />} />,
-    <Route path="hosting" element={<Hosting/>} />,
-    <Route path='*' element={<PageNotFound/>}/>
+    <Route path="hosting" element={<Hosting />} />,
+    <Route path='codeclash' element={<CodeClash/>}/>,
+    <Route path='*' element={<PageNotFound />} />
 ];
 
 

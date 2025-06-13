@@ -4,13 +4,13 @@ import { getFirestore, addDoc, collection } from "firebase/firestore";
 import { getStorage } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY, // Accessing the API key from environment variables
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY, // Updated to use REACT_APP_ prefix
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
   projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
   storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID, // Use process.env
-  appId: process.env.REACT_APP_FIREBASE_APP_ID, // Use process.env
-  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID // Use process.env
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 };
 
 // Initialize Firebase
