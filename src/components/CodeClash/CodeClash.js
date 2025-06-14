@@ -19,25 +19,25 @@ const CodeClash = () => {
   });
 
   const prizes = [
-    { 
-      position: "1st", 
-      amount: "₹10,000", 
+    {
+      position: "1st",
+      amount: "₹10,000",
       description: "Cash Prize + Lifetime SP Subscription + Certificate",
       icon: "🏆",
       bgColor: styles.prizeGold,
       borderColor: styles.borderGold
     },
-    { 
-      position: "2nd", 
-      amount: "₹8,000", 
+    {
+      position: "2nd",
+      amount: "₹8,000",
       description: "Cash Prize + 1-Year SP Subscription + Certificate",
       icon: "🥈",
       bgColor: styles.prizeSilver,
       borderColor: styles.borderSilver
     },
-    { 
-      position: "3rd", 
-      amount: "₹5,000", 
+    {
+      position: "3rd",
+      amount: "₹5,000",
       description: "Cash Prize + 6-Month SP Subscription + Certificate",
       icon: "🥉",
       bgColor: styles.prizeBronze,
@@ -135,7 +135,7 @@ const CodeClash = () => {
   const handleArrayChange = (field, value, checked) => {
     setFormData(prev => ({
       ...prev,
-      [field]: checked 
+      [field]: checked
         ? [...prev[field], value]
         : prev[field].filter(item => item !== value)
     }));
@@ -161,104 +161,59 @@ const CodeClash = () => {
     }, 5000);
   };
 
-// Updated saveToGoogleSheet function with better error handling and CORS support
+  // Updated saveToGoogleSheet function with better error handling and CORS support
   const saveToGoogleSheet = async (data) => {
-    // Your Google Apps Script Web App URL
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbywkkIZ4ZAzWicsh1_VxR0RfpIjv9rL9c03yvOZkYZC-ls4SSSFGinj3osw12A6E2t-/exec'; 
-    
+    const scriptURL = 'https://script.google.com/macros/s/AKfycby3NSJnaErc36oFwIn7QZ6K54Dlx5O0fOuCd9ObK1V2EFGcKuWlN37i3om7-FNgLd6N/exec';
+
     console.log('Sending data to Google Sheet:', data);
-    console.log('Script URL:', scriptURL);
-    
+
     try {
       // Client-side validation
       if (!data.name || !data.email || !data.whatsapp) {
         throw new Error('Missing required fields: name, email, or whatsapp');
       }
 
-      // Basic WhatsApp number validation
-      if (!/^\+?[\d\s\-\(\)]+$/.test(data.whatsapp)) {
-        throw new Error('Invalid WhatsApp number format');
-      }
+      // Prepare FormData (avoids CORS preflight)
+      const formData = new FormData();
+      formData.append('data', JSON.stringify(data));
 
-      // Basic email validation
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-        throw new Error('Invalid email format');
-      }
-
-      // Prepare data for submission
-      const submissionData = {
-        name: data.name.trim(),
-        email: data.email.trim().toLowerCase(),
-        whatsapp: data.whatsapp.trim(),
-        passoutYear: data.passoutYear,
-        languages: data.languages,
-        graduationType: data.graduationType,
-        collegeName: data.collegeName.trim(),
-        courses: data.courses,
-        category: data.category
-      };
-
-      console.log('Submitting data:', submissionData);
-
-      // Make the request to Google Apps Script
       const response = await fetch(scriptURL, {
         method: 'POST',
         mode: 'cors',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(submissionData)
+        body: formData // No headers!
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
-
-      // Check if the request was successful
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      // Try to parse the response as JSON
-      let result;
       const responseText = await response.text();
-      console.log('Raw response:', responseText);
+      console.log('Raw response from Google Apps Script:', responseText);
 
       try {
-        result = JSON.parse(responseText);
-        console.log('Parsed response:', result);
-        
+        const result = JSON.parse(responseText);
         if (result.status === 'error') {
-          throw new Error(result.message || 'Server returned an error');
+          throw new Error(result.message || 'Unknown server error');
         }
-        
         return result;
-      } catch (jsonError) {
-        console.log('Could not parse JSON response:', jsonError);
-        // If JSON parsing fails but we got a 200 response, consider it successful
-        // This handles cases where Google Apps Script returns HTML instead of JSON
-        if (response.status === 200) {
-          return { 
-            status: 'success', 
+      } catch (err) {
+        if (response.ok) {
+          return {
+            status: 'success',
             message: 'Registration submitted successfully',
-            rawResponse: responseText 
+            rawResponse: responseText
           };
+        } else {
+          throw new Error('Invalid server response');
         }
-        throw new Error('Invalid response format from server');
       }
-      
+
     } catch (error) {
-      console.error('Error in saveToGoogleSheet:', error);
-      
-      // More specific error messages
-      if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
-        throw new Error('Network error: Unable to connect to registration server. Please check your internet connection and try again.');
-      } else if (error.message.includes('CORS')) {
-        throw new Error('Access error: Please make sure your Google Apps Script is properly deployed with public access.');
+      console.error('Error submitting to Google Sheet:', error);
+      if (error.name === 'TypeError') {
+        throw new Error('Network error: Please check your connection or script URL.');
       } else {
-        throw new Error(`Registration failed: ${error.message}`);
+        throw error;
       }
     }
   };
+
 
   // Updated handleSubmit function with better error handling
   const handleSubmit = async (e) => {
@@ -308,10 +263,10 @@ const CodeClash = () => {
       // Submit to Google Sheet
       const result = await saveToGoogleSheet(formData);
       console.log('Registration result:', result);
-      
+
       // Show success message
       showToast("🎉 Registration Successful! Redirecting to WhatsApp community...", 'success');
-      
+
       // Close form and reset data
       setIsFormOpen(false);
       setFormData({
@@ -325,12 +280,10 @@ const CodeClash = () => {
         courses: [],
         category: ''
       });
-      
-      // Redirect to WhatsApp after a short delay
-      setTimeout(() => {
-        window.open('https://chat.whatsapp.com/EVIiK9MJez91nEiP03Ft7L', '_blank');
-      }, 2000);
-      
+
+      // Redirect immediately to WhatsApp community link
+      window.open('https://chat.whatsapp.com/EVIiK9MJez91nEiP03Ft7L', '_blank');
+
     } catch (error) {
       console.error('Form submission error:', error);
       showToast(`❌ ${error.message}`, 'error');
@@ -340,7 +293,7 @@ const CodeClash = () => {
   };
 
   return (
-    <div className={styles.pageContainer}>
+    <div className={styles.pageContainer} style={{ background: "linear-gradient(to top, rgb(107, 86, 229) 5%, rgb(244, 240, 240) 100%)", }}>
       <div className="container mx-auto px-4 py-8">
         <div className={`text-center mb-12 ${styles.fadeIn}`}>
           <div className="d-flex justify-content-center align-items-center gap-3 mb-4">
@@ -445,8 +398,8 @@ const CodeClash = () => {
           </div>
           <div className={styles.stepsContainer}>
             {participationSteps.map((item, index) => (
-              <motion.div 
-                key={index} 
+              <motion.div
+                key={index}
                 className={`${styles.stepCard} ${item.bgColor} ${styles.hoverScale}`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -471,7 +424,7 @@ const CodeClash = () => {
 
         <div className="row mb-12">
           <div className="col-md-4">
-            <motion.div 
+            <motion.div
               className={`${styles.eventCard} ${styles.hoverScale}`}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -483,14 +436,14 @@ const CodeClash = () => {
               </div>
               <div className={styles.eventCardContent}>
                 <p>
-                  Join the ultimate coding challenge designed for passionate developers. 
+                  Join the ultimate coding challenge designed for passionate developers.
                   Test your skills, learn new technologies, and win amazing prizes!
                 </p>
               </div>
             </motion.div>
           </div>
           <div className="col-md-4">
-            <motion.div 
+            <motion.div
               className={`${styles.eventCard} ${styles.hoverScale}`}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -502,14 +455,14 @@ const CodeClash = () => {
               </div>
               <div className={styles.eventCardContent}>
                 <p>
-                  Multi-round coding challenges including algorithm problems, 
+                  Multi-round coding challenges including algorithm problems,
                   web development tasks, and innovative project showcases.
                 </p>
               </div>
             </motion.div>
           </div>
           <div className="col-md-4">
-            <motion.div 
+            <motion.div
               className={`${styles.eventCard} ${styles.hoverScale}`}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -540,9 +493,9 @@ const CodeClash = () => {
             <div className="row mb-8">
               {prizes.map((prize, index) => (
                 <div key={index} className="col-md-4">
-                  <motion.div 
+                  <motion.div
                     className={`${styles.prizeCard} ${prize.bgColor} ${prize.borderColor}`}
-                    whileHover={{ scale: 1.1 }}
+                    whileHover={{ scale: 1.2 }}
                     transition={{ type: "spring", stiffness: 300, damping: 20 }}
                   >
                     <div className={styles.prizeCardContent}>
@@ -576,7 +529,7 @@ const CodeClash = () => {
         </div>
 
         <div className="text-center mb-12">
-          <motion.button 
+          <motion.button
             onClick={() => setIsFormOpen(true)}
             className={`${styles.primaryButton} ${styles.pulseAnimation}`}
             whileHover={{ scale: 1.05 }}
@@ -597,8 +550,8 @@ const CodeClash = () => {
           </div>
           <div className={styles.faqContent}>
             {faqs.map((faq, index) => (
-              <motion.div 
-                key={index} 
+              <motion.div
+                key={index}
                 className={styles.faqItem}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -614,7 +567,7 @@ const CodeClash = () => {
                   </span>
                 </button>
                 {openFaq === index && (
-                  <motion.div 
+                  <motion.div
                     className={styles.faqAnswer}
                     initial={{ opacity: 0, height: 0 }}
                     animate={{ opacity: 1, height: "auto" }}
@@ -629,26 +582,26 @@ const CodeClash = () => {
         </div>
 
         <div className="text-center mb-8">
-          <motion.button 
+          <motion.button
             onClick={() => setIsFormOpen(true)}
             className={styles.secondaryButton}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            <span>👤</span>
+            {/* <span>👤</span> */}
             Register Now
             <span>✨</span>
           </motion.button>
         </div>
 
         {isFormOpen && (
-          <motion.div 
+          <motion.div
             className={styles.modal}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
           >
-            <motion.div 
+            <motion.div
               className={styles.modalContent}
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
@@ -666,7 +619,7 @@ const CodeClash = () => {
                     </p>
                   </div>
                 </div>
-                <button 
+                <button
                   onClick={() => setIsFormOpen(false)}
                   className={styles.modalClose}
                 >
@@ -752,8 +705,8 @@ const CodeClash = () => {
                     <div className="col-md-6">
                       <div className={styles.formGroup}>
                         <label className={styles.formLabel}>Graduation Type *</label>
-                        <select 
-                          value={formData.graduationType} 
+                        <select
+                          value={formData.graduationType}
                           onChange={(e) => handleInputChange('graduationType', e.target.value)}
                           className={styles.formSelect}
                           required
