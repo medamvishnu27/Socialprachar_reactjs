@@ -1,8 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import styles from './codeclash.module.css';
 
 const CodeClash = () => {
+  useEffect(() => {
+    document.title = "CodeClash 2.0 : A multi-day coding competition for student | social parchar";
+  }, []);
+
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [openFaq, setOpenFaq] = useState(null);
@@ -375,7 +379,7 @@ const CodeClash = () => {
                     </div>
                   </div>
                 </div>
-                <div className="col-md-6">
+                <div className="col-md-6 ">
                   <div className="d-flex align-items-center gap-3">
                     <span className={styles.infoIcon}>📍</span>
                     <div>
@@ -421,16 +425,17 @@ const CodeClash = () => {
             ))}
           </div>
         </div>
-
-        <div className="row mb-12">
-          <div className="col-md-4">
+        
+          {/* events detils card */}
+        <div className="row mb-12 gy-3  ">
+          <div className="col-md-4  "  >
             <motion.div
               className={`${styles.eventCard} ${styles.hoverScale}`}
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.3 }}
             >
-              <div className={styles.eventCardHeader}>
+              <div className={styles.eventCardHeader}  >
                 <span className={styles.eventIcon}>⭐</span>
                 <h3>Event Overview</h3>
               </div>
@@ -442,7 +447,7 @@ const CodeClash = () => {
               </div>
             </motion.div>
           </div>
-          <div className="col-md-4">
+          <div className="col-md-4 " >
             <motion.div
               className={`${styles.eventCard} ${styles.hoverScale}`}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -461,7 +466,7 @@ const CodeClash = () => {
               </div>
             </motion.div>
           </div>
-          <div className="col-md-4">
+          <div className="col-md-4 " >
             <motion.div
               className={`${styles.eventCard} ${styles.hoverScale}`}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -481,6 +486,8 @@ const CodeClash = () => {
           </div>
         </div>
 
+        {/* prize pool section */}
+
         <div className={styles.prizeSection}>
           <div className={styles.prizeSectionHeader}>
             <span className={styles.prizeIcon}>🏆</span>
@@ -490,7 +497,7 @@ const CodeClash = () => {
             </p>
           </div>
           <div className={styles.prizeSectionContent}>
-            <div className="row mb-8">
+            <div className="row mb-8 gy-3 ">
               {prizes.map((prize, index) => (
                 <div key={index} className="col-md-4">
                   <motion.div
@@ -527,6 +534,8 @@ const CodeClash = () => {
             </div>
           </div>
         </div>
+
+        {/* register button */}
 
         <div className="text-center mb-12">
           <motion.button
@@ -816,7 +825,7 @@ const CodeClash = () => {
                       <div className="d-flex align-items-center gap-3">
                         <span>✅</span>
                         Complete Registration
-                        <span>✨</span>
+                        {/* <span>✨</span> */}
                       </div>
                     )}
                   </motion.button>
