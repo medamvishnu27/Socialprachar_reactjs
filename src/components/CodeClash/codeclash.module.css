@@ -130,6 +130,11 @@
   color: #ea580c;
   border-color: #fed7aa;
 }
+.cahprizee{
+  color: #ea580c;
+  font-weight: 800;
+
+}
 
 /* Info Section - Full Width */
 .infoSection {
@@ -469,6 +474,29 @@
   font-weight: bold;
   color: #7c3aed;
   margin-bottom: 0.75rem;
+}
+
+.cashPrizeText {
+  font-size: 0.8rem;
+  font-weight: normal;
+  margin-left: 0.25rem;
+  color: #050505;
+}
+
+.selectAllCheckboxContainer {
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.selectAllCheckboxContainer input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
 }
 
 .prizeDescription {
