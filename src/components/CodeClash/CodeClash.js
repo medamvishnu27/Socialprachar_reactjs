@@ -4,7 +4,7 @@ import styles from './codeclash.module.css';
 
 const CodeClash = () => {
   useEffect(() => {
-    document.title = "CodeClash 2.0 : A multi-day coding competition for student | social parchar";
+    document.title = "CodeClash 2.0 : A multi-day coding competition for student | social Prachar";
   }, []);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -18,7 +18,6 @@ const CodeClash = () => {
     languages: [],
     graduationType: '',
     collegeName: '',
-    courses: [],
     category: ''
   });
 
@@ -26,7 +25,7 @@ const CodeClash = () => {
     {
       position: "1st",
       amount: "₹10,000",
-      description: "Cash Prize + Lifetime SP Subscription + Certificate",
+      description: "Cash Prize + Lifetime Social Prachar Subscription + Certificate",
       icon: "🏆",
       bgColor: styles.prizeGold,
       borderColor: styles.borderGold
@@ -34,15 +33,15 @@ const CodeClash = () => {
     {
       position: "2nd",
       amount: "₹8,000",
-      description: "Cash Prize + 1-Year SP Subscription + Certificate",
+      description: "Cash Prize + 1-Year Social Prachar Subscription + Certificate",
       icon: "🥈",
       bgColor: styles.prizeSilver,
       borderColor: styles.borderSilver
     },
     {
       position: "3rd",
-      amount: "₹5,000",
-      description: "Cash Prize + 6-Month SP Subscription + Certificate",
+      amount: "₹5,000 ",
+      description: "Cash Prize + 6-Month Social Prachar Subscription + Certificate",
       icon: "🥉",
       bgColor: styles.prizeBronze,
       borderColor: styles.borderBronze
@@ -95,7 +94,6 @@ const CodeClash = () => {
   ];
 
   const languages = ["HTML", "CSS", "JavaScript", "Bootstrap"];
-  const courses = ["HTML", "CSS", "JavaScript", "Bootstrap"];
 
   const faqs = [
     {
@@ -143,6 +141,15 @@ const CodeClash = () => {
         ? [...prev[field], value]
         : prev[field].filter(item => item !== value)
     }));
+  };
+
+  // New handler for select all toggle
+  const handleSelectAllLanguages = (checked) => {
+    if (checked) {
+      setFormData(prev => ({ ...prev, languages: [...languages] }));
+    } else {
+      setFormData(prev => ({ ...prev, languages: [] }));
+    }
   };
 
   const showToast = (message, type = 'success') => {
@@ -250,15 +257,15 @@ const CodeClash = () => {
       if (!formData.collegeName.trim()) {
         validationErrors.push('Please enter your college name');
       }
-      if (!formData.category) {
-        validationErrors.push('Please select your category');
-      }
+      // if (!formData.category) {
+      //   validationErrors.push('Please select your category');
+      // }
       if (formData.languages.length === 0) {
         validationErrors.push('Please select at least one programming language');
       }
-      if (formData.courses.length === 0) {
-        validationErrors.push('Please select at least one course');
-      }
+      // if (formData.courses.length === 0) {
+      //   validationErrors.push('Please select at least one course');
+      // }
 
       if (validationErrors.length > 0) {
         throw new Error(validationErrors[0]);
@@ -307,7 +314,7 @@ const CodeClash = () => {
             </h1>
             <span className={`${styles.headerIcon} ${styles.bounce} ${styles.bounceDelay}`}>🏆</span>
           </div>
-          <p className={styles.subtitle}>by Social Parchar</p>
+          <p className={styles.subtitle}>by Social Prachar</p>
           <p className={styles.tagline}>🏆 Challenge • 🎯 Showcase • 🏅 Rewards</p>
           <div className="d-flex flex-wrap justify-content-center gap-4 mb-8">
             <span className={`${styles.badge} ${styles.badgePurple}`}>
@@ -324,12 +331,12 @@ const CodeClash = () => {
 
         <div className={styles.infoSection}>
           <div className={styles.infoHeader}>
-            <h2 className={styles.infoTitle}>Code Clash 2.0 by Social Parchar</h2>
+            <h2 className={styles.infoTitle}>Code Clash 2.0 by Social Prachar</h2>
             <div className={styles.infoSubtitle}>
               7 Days • 7 Challenges • 3 Winners
             </div>
             <p className={styles.infoDescription}>
-              Winners will win total cash prizes and subscription to Social Parchar worth ₹1.3 Lakhs
+              Winners will win total cash prizes and subscription to Social Prachar worth <span className={styles.cahprizee}>₹1,30,000 INR</span>
             </p>
           </div>
           <div className={styles.infoContent}>
@@ -341,7 +348,7 @@ const CodeClash = () => {
                     <h3>Eligibility</h3>
                   </div>
                   <p>
-                    Students with undergraduate background. Passed out students from 2024, 2025 are eligible to take the Code Clash test.
+                    Students with <span className=''>B-tech,MBA,MCA,Degree</span> background with Pass-out years <span className=''>2024, 2025,2026 </span> are eligible to take the Code Clash test.
                   </p>
                 </div>
               </div>
@@ -352,7 +359,7 @@ const CodeClash = () => {
                     <h3>Skills Required</h3>
                   </div>
                   <p>
-                    JavaScript and ReactJS knowledge is required to participate in the competition.
+                    Only on Frontend-Development  skills <span>Html,Css,javascript,Bootstrap</span> (medium to hard level)
                   </p>
                 </div>
               </div>
@@ -363,7 +370,7 @@ const CodeClash = () => {
                     <h3>Process</h3>
                   </div>
                   <p>
-                    7-day challenge: 6 days online challenges and final 7th day grand finale offline.
+                    7-day challenge: 6 days online challenges and final 7th day grand finale offline At Our Kphb office.
                   </p>
                 </div>
               </div>
@@ -384,7 +391,7 @@ const CodeClash = () => {
                     <span className={styles.infoIcon}>📍</span>
                     <div>
                       <h4>Grand Finale (Offline)</h4>
-                      <p>June 28, 2025 - KPHB Office</p>
+                      <p>June 28, 2025 - At our KPHB Office</p>
                     </div>
                   </div>
                 </div>
@@ -493,8 +500,7 @@ const CodeClash = () => {
             <span className={styles.prizeIcon}>🏆</span>
             <h2 className={styles.prizeSectionTitle}>🏆 Prize Pool 🏆</h2>
             <p className={styles.prizeSectionDescription}>
-              Win exciting cash prizes and certificates worth ₹1.3 Lakhs!
-            </p>
+              Win exciting cash prizes and subscriptions worth ₹1,30,000 INR            </p>
           </div>
           <div className={styles.prizeSectionContent}>
             <div className="row mb-8 gy-3 ">
@@ -513,7 +519,8 @@ const CodeClash = () => {
                         {prize.position}
                       </div>
                       <div className={styles.prizeAmount}>
-                        {prize.amount}
+                        {prize.amount} 
+                        <span className={styles.cashPrizeText}>Cash prize</span>
                       </div>
                       <p className={styles.prizeDescription}>
                         {prize.description}
@@ -525,7 +532,7 @@ const CodeClash = () => {
             </div>
             <div className={styles.prizeSummary}>
               <p className={styles.prizeSummaryText}>
-                🎯 Total Prize Pool: ₹23,000+ Cash + Social Parchar Subscriptions Worth ₹1.3 Lakhs
+                🎯 Total Prize Pool: ₹23,000+ Cash + Social Prachar Subscriptions Worth ₹1.3 Lakhs
               </p>
               <div className={styles.prizeSummarySubtext}>
                 <span>🎁</span>
@@ -742,7 +749,7 @@ const CodeClash = () => {
                       </div>
                     </div>
                   </div>
-                  <div className={styles.formGroup}>
+                  {/* <div className={styles.formGroup}>
                     <label className={styles.formLabel}>Category *</label>
                     <div className={styles.radioGroup}>
                       <div className={styles.radioItem}>
@@ -779,7 +786,7 @@ const CodeClash = () => {
                         <label htmlFor="cat-diploma">diploma</label>
                       </div>
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <div className={styles.formSection}>
                   <h3 className={styles.formSectionTitle}>
@@ -788,7 +795,17 @@ const CodeClash = () => {
                   </h3>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>Languages and Frameworks you know *</label>
+                     <div className={styles.selectAllCheckboxContainer}>
+                        <input
+                          type="checkbox"
+                          id="select-all-languages"
+                          checked={formData.languages.length === languages.length}
+                          onChange={(e) => handleSelectAllLanguages(e.target.checked)}
+                        />
+                        <label htmlFor="select-all-languages">Select All</label>
+                      </div>
                     <div className={styles.checkboxGrid}>
+                     
                       {languages.map(lang => (
                         <div key={lang} className={styles.checkboxItem}>
                           <input
@@ -798,22 +815,6 @@ const CodeClash = () => {
                             onChange={(e) => handleArrayChange('languages', lang, e.target.checked)}
                           />
                           <label htmlFor={lang}>{lang}</label>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                  <div className={styles.formGroup}>
-                    <label className={styles.formLabel}>Courses you know *</label>
-                    <div className={styles.checkboxGrid}>
-                      {courses.map(course => (
-                        <div key={course} className={styles.checkboxItem}>
-                          <input
-                            type="checkbox"
-                            id={`course-${course}`}
-                            checked={formData.courses.includes(course)}
-                            onChange={(e) => handleArrayChange('courses', course, e.target.checked)}
-                          />
-                          <label htmlFor={`course-${course}`}>{course}</label>
                         </div>
                       ))}
                     </div>
