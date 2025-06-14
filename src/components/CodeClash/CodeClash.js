@@ -94,7 +94,7 @@ const CodeClash = () => {
     }
   ];
 
-  const languages = ["HTML", "CSS", "JavaScript", "Bootstrap", "React", "Node.js", "Python"];
+  const languages = ["HTML", "CSS", "JavaScript", "Bootstrap"];
   const courses = ["HTML", "CSS", "JavaScript", "Bootstrap"];
 
   const faqs = [
@@ -687,7 +687,7 @@ const CodeClash = () => {
                       <div className={styles.formGroup}>
                         <label className={styles.formLabel}>Year of Passout *</label>
                         <div className={styles.radioGroup}>
-                          {['2024', '2025'].map(year => (
+                          {['2024', '2025','2026'].map(year => (
                             <div key={year} className={styles.radioItem}>
                               <input
                                 type="radio"
@@ -724,7 +724,7 @@ const CodeClash = () => {
                           <option value="btech">B.Tech</option>
                           <option value="degree">Degree</option>
                           <option value="diploma">Diploma</option>
-                          <option value="other">Other</option>
+                          
                         </select>
                       </div>
                     </div>
@@ -766,6 +766,17 @@ const CodeClash = () => {
                           onChange={(e) => handleInputChange('category', e.target.value)}
                         />
                         <label htmlFor="cat-degree">Degree</label>
+                      </div>
+                      <div className={styles.radioItem}>
+                        <input
+                          type="radio"
+                          id="cat-diploma"
+                          name="category"
+                          value="diploma"
+                          checked={formData.category === 'diploma'}
+                          onChange={(e) => handleInputChange('category', e.target.value)}
+                        />
+                        <label htmlFor="cat-diploma">diploma</label>
                       </div>
                     </div>
                   </div>
