@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import { Trash2, User, Building, TrendingUp, Search, Filter } from 'lucide-react';
+import { Trash2, User, Building, TrendingUp, Search, Filter, Edit2 } from 'lucide-react';
 import { collection, db, storage } from '../../firebase';
-import { addDoc, deleteDoc, doc, getDocs } from 'firebase/firestore';
+import { addDoc, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
 import Loading from '../extraComponents/loading';
 
@@ -24,17 +24,11 @@ const OurAchievementsDashboard = () => {
     const [selectedRole, setSelectedRole] = useState('all');
     const [selectedSection, setSelectedSection] = useState('all');
     const [loading, setLoading] = useState(false);
+    const [formErrors, setFormErrors] = useState({});
+    const [editingId, setEditingId] = useState(null); // Track the achievement being edited
     const profileImageRef = useRef(null);
     const preCompanyRef = useRef(null);
     const postCompanyRef = useRef(null);
-    const [formErrors, setFormErrors] = useState({});
-
-
-    // Clear file input fields
-    if (profileImageRef.current) profileImageRef.current.value = '';
-    if (preCompanyRef.current) preCompanyRef.current.value = '';
-    if (postCompanyRef.current) postCompanyRef.current.value = '';
-
 
     // Predefined sections/programs for the form dropdown
     const predefinedSections = [
@@ -79,6 +73,49 @@ const OurAchievementsDashboard = () => {
         }));
     };
 
+    const handleEdit = (achievement) => {
+        setEditingId(achievement.id);
+        setFormData({
+            name: achievement.name,
+            role: achievement.role,
+            applicableSection: achievement.applicableSection,
+            profileImage: null,
+            profileImagePreview: achievement.profileImage || '',
+            hike: achievement.hike,
+            preCompany: null,
+            preCompanyPreview: achievement.preCompany || '',
+            postCompany: null,
+            postCompanyPreview: achievement.postCompany || '',
+            startCompanyType: achievement.startCompanyType,
+        });
+        // Clear file input fields
+        if (profileImageRef.current) profileImageRef.current.value = '';
+        if (preCompanyRef.current) preCompanyRef.current.value = '';
+        if (postCompanyRef.current) postCompanyRef.current.value = '';
+    };
+
+    const handleCancelEdit = () => {
+        setEditingId(null);
+        setFormData({
+            name: '',
+            role: '',
+            applicableSection: '',
+            profileImage: null,
+            profileImagePreview: '',
+            hike: '',
+            preCompany: null,
+            preCompanyPreview: '',
+            postCompany: null,
+            postCompanyPreview: '',
+            startCompanyType: '',
+        });
+        setFormErrors({});
+        // Clear file input fields
+        if (profileImageRef.current) profileImageRef.current.value = '';
+        if (preCompanyRef.current) preCompanyRef.current.value = '';
+        if (postCompanyRef.current) postCompanyRef.current.value = '';
+    };
+
     const handleSubmit = async () => {
         const errors = {};
 
@@ -87,33 +124,33 @@ const OurAchievementsDashboard = () => {
         if (!formData.applicableSection?.trim()) errors.applicableSection = 'Applicable section is required';
         if (!formData.hike?.trim()) errors.hike = 'Hike is required';
         if (!formData.startCompanyType?.trim()) errors.startCompanyType = 'Start company type is required';
-        if (!formData.profileImage) errors.profileImage = 'Profile image is required';
-        if (!formData.preCompany) errors.preCompany = 'Pre company logo is required';
-        if (!formData.postCompany) errors.postCompany = 'Post company logo is required';
+        if (!editingId && !formData.profileImage) errors.profileImage = 'Profile image is required';
+        if (!editingId && !formData.preCompany) errors.preCompany = 'Pre company logo is required';
+        if (!editingId && !formData.postCompany) errors.postCompany = 'Post company logo is required';
 
         setFormErrors(errors);
-
 
         if (Object.keys(errors).length > 0) {
             const firstError = Object.values(errors)[0];
             alert(firstError);
             return;
         }
+
         setLoading(true);
         try {
             const timestamp = Date.now();
-            const uploadImage = async (file, pathPrefix) => {
-                if (!file) return '';
+            const uploadImage = async (file, pathPrefix, existingUrl) => {
+                if (!file) return existingUrl || '';
                 const storageRef = ref(storage, `${pathPrefix}/${timestamp}_${file.name}`);
                 await uploadBytes(storageRef, file);
                 return await getDownloadURL(storageRef);
             };
 
-            const profileImageUrl = await uploadImage(formData.profileImage, 'profileImages');
-            const preCompanyLogoUrl = await uploadImage(formData.preCompany, 'companyLogos/pre');
-            const postCompanyLogoUrl = await uploadImage(formData.postCompany, 'companyLogos/post');
+            const profileImageUrl = await uploadImage(formData.profileImage, 'profileImages', formData.profileImagePreview);
+            const preCompanyLogoUrl = await uploadImage(formData.preCompany, 'companyLogos/pre', formData.preCompanyPreview);
+            const postCompanyLogoUrl = await uploadImage(formData.postCompany, 'companyLogos/post', formData.postCompanyPreview);
 
-            const newAchievement = {
+            const achievementData = {
                 name: formData.name.trim(),
                 role: formData.role.trim(),
                 applicableSection: formData.applicableSection.trim(),
@@ -122,32 +159,26 @@ const OurAchievementsDashboard = () => {
                 preCompany: preCompanyLogoUrl,
                 postCompany: postCompanyLogoUrl,
                 startCompanyType: formData.startCompanyType.trim(),
-                dateAdded: new Date().toISOString(),
+                dateAdded: editingId ? achievements.find(a => a.id === editingId).dateAdded : new Date().toISOString(),
             };
 
-            // await addDoc(collection(db, "successStories-studentAchievements"), newAchievement);
-            // setAchievements(prev => [...prev, { id: timestamp, ...newAchievement }]);
-            const docRef = await addDoc(collection(db, "successStories-studentAchievements"), newAchievement);
-            setAchievements(prev => [...prev, { id: docRef.id, ...newAchievement }]);
+            if (editingId) {
+                // Update existing achievement
+                const achievementRef = doc(db, "successStories-studentAchievements", editingId);
+                await updateDoc(achievementRef, achievementData);
+                setAchievements(prev => prev.map(item => item.id === editingId ? { id: editingId, ...achievementData } : item));
+                alert('Student achievement updated successfully!');
+            } else {
+                // Add new achievement
+                const docRef = await addDoc(collection(db, "successStories-studentAchievements"), achievementData);
+                setAchievements(prev => [...prev, { id: docRef.id, ...achievementData }]);
+                alert('Student achievement added successfully!');
+            }
 
             // Reset form
-            setFormData({
-                name: '',
-                role: '',
-                applicableSection: '',
-                profileImage: null,
-                profileImagePreview: '',
-                hike: '',
-                preCompany: null,
-                preCompanyPreview: null,
-                postCompany: null,
-                postCompanyPreview: null,
-                startCompanyType: '',
-            });
-
-            alert('Student achievement added successfully!');
+            handleCancelEdit();
         } catch (error) {
-            console.error("Error adding achievement: ", error);
+            console.error("Error processing achievement: ", error);
             alert('An error occurred while saving the achievement.');
         }
         setLoading(false);
@@ -159,12 +190,14 @@ const OurAchievementsDashboard = () => {
             try {
                 await deleteDoc(doc(db, "successStories-studentAchievements", id));
                 setAchievements(prev => prev.filter(item => item.id !== id));
+                if (editingId === id) handleCancelEdit();
             } catch (err) {
                 console.error("Failed to delete record:", err);
             }
             setLoading(false);
         }
     };
+
     useEffect(() => {
         const fetchAchievements = async () => {
             const snapshot = await getDocs(collection(db, "successStories-studentAchievements"));
@@ -173,8 +206,6 @@ const OurAchievementsDashboard = () => {
         };
         fetchAchievements();
     }, []);
-
-
 
     const filteredAchievements = achievements.filter(achievement => {
         const roleMatch = selectedRole === 'all' || achievement.role === selectedRole;
@@ -198,7 +229,7 @@ const OurAchievementsDashboard = () => {
                 <div className="bg-white rounded-lg shadow-md p-6 mb-8">
                     <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
                         <User className="w-5 h-5" />
-                        Add New Student Achievement
+                        {editingId ? 'Edit Student Achievement' : 'Add New Student Achievement'}
                     </h2>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -275,7 +306,6 @@ const OurAchievementsDashboard = () => {
                                 placeholder="e.g., 60% Hike or ₹5L increase"
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 onChange={handleChange}
-                                ref={preCompanyRef}
                             />
                         </div>
 
@@ -287,7 +317,7 @@ const OurAchievementsDashboard = () => {
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 accept="image/*"
                                 onChange={handleFileChange}
-                                ref={postCompanyRef}
+                                ref={preCompanyRef}
                             />
                             {formData.preCompanyPreview && (
                                 <div className="mt-2">
@@ -304,6 +334,7 @@ const OurAchievementsDashboard = () => {
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 accept="image/*"
                                 onChange={handleFileChange}
+                                ref={postCompanyRef}
                             />
                             {formData.postCompanyPreview && (
                                 <div className="mt-2">
@@ -325,18 +356,26 @@ const OurAchievementsDashboard = () => {
                             <p className="text-xs text-gray-500 mt-1">Type of company where the student started their career</p>
                         </div>
 
-                        <div className="md:col-span-2">
+                        <div className="md:col-span-2 flex gap-4">
                             <button
                                 onClick={handleSubmit}
                                 disabled={loading}
                                 className={`bg-blue-600 text-white px-8 py-3 rounded-md hover:bg-blue-700 transition duration-200 font-medium ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
-                                {loading ? 'Submitting...' : 'Add Achievement'}
+                                {loading ? 'Processing...' : editingId ? 'Update Achievement' : 'Add Achievement'}
                             </button>
+                            {editingId && (
+                                <button
+                                    onClick={handleCancelEdit}
+                                    disabled={loading}
+                                    className="bg-red-600 text-white px-8 py-3 rounded-md hover:bg-gray-700 transition duration-200 font-medium"
+                                >
+                                    Cancel Edit
+                                </button>
+                            )}
                         </div>
                     </div>
                 </div>
-
 
                 {/* Filter Section */}
                 <div className="bg-white rounded-lg shadow-md p-6 mb-8">
@@ -393,8 +432,8 @@ const OurAchievementsDashboard = () => {
                             )}
                         </div>
                     ) : (
-                            <div className="divide-y divide-gray-200 max-h-[650px] overflow-y-auto">
-                                {filteredAchievements.slice(0, 12).map((achievement) => (
+                        <div className="divide-y divide-gray-200 max-h-[650px] overflow-y-auto">
+                            {filteredAchievements.slice(0, 51).map((achievement) => (
                                 <div key={achievement.id} className="p-6 hover:bg-gray-50 transition duration-150">
                                     <div className="flex items-center justify-between">
                                         <div className="flex items-center space-x-4">
@@ -454,6 +493,13 @@ const OurAchievementsDashboard = () => {
                                                 )}
                                             </div>
 
+                                            <button
+                                                onClick={() => handleEdit(achievement)}
+                                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition duration-200"
+                                                title="Edit student"
+                                            >
+                                                <Edit2 size={18} />
+                                            </button>
                                             <button
                                                 onClick={() => handleDelete(achievement.id)}
                                                 className="p-2 text-red-600 hover:bg-red-50 rounded-md transition duration-200"
@@ -539,7 +585,13 @@ const OurAchievementsDashboard = () => {
                                         <strong className="text-gray-900">{achievement.startCompanyType || 'Not specified'}</strong>
                                     </p>
 
-                                    <div className="flex justify-center">
+                                    <div className="flex justify-center gap-4">
+                                        <button
+                                            onClick={() => handleEdit(achievement)}
+                                            className="text-blue-600 hover:text-blue-800 text-sm font-medium"
+                                        >
+                                            Edit
+                                        </button>
                                         <button
                                             onClick={() => handleDelete(achievement.id)}
                                             className="text-red-600 hover:text-red-800 text-sm font-medium"
