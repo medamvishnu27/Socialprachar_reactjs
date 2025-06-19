@@ -48,9 +48,16 @@ const CourseBlog = () => {
       } catch (error) {
         console.log('Error sharing:', error);
       }
+    } else if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        alert('Link copied to clipboard!');
+      } catch (error) {
+        console.log('Failed to copy:', error);
+        alert('Failed to copy link to clipboard.');
+      }
     } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert('Link copied to clipboard!');
+      alert('Sharing is not supported on this browser.');
     }
   };
 

@@ -365,7 +365,7 @@ const AppContent = () => {
 
   React.useEffect(() => {
     // Show popup logic
-    const excludedPaths = ["/thank-you", "/privacy-policy", "/contact"];
+    const excludedPaths = ["/thank-you", "/privacy-policy", "/contact","/codeclash"];
     if (!excludedPaths.includes(location.pathname)) {
       const timer = setTimeout(() => {
         setShowPopup(true);

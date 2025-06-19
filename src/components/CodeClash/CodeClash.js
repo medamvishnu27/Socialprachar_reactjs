@@ -400,6 +400,24 @@ const CodeClash = () => {
           </div>
         </div>
 
+        {/* extra registration button */}
+
+
+        <div className="text-center mb-8">
+          <motion.button
+            onClick={() => setIsFormOpen(true)}
+            className={styles.secondaryButton}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            {/* <span>👤</span> */}
+            Register for codeclash
+            {/* <span>✨</span> */}
+          </motion.button>
+        </div>
+
+
+
         <div className={styles.participationSection}>
           <div className={styles.sectionHeader}>
             <h2 className={styles.sectionTitle}>How to Participate</h2>
@@ -432,8 +450,8 @@ const CodeClash = () => {
             ))}
           </div>
         </div>
-        
-          {/* events detils card */}
+
+        {/* events detils card */}
         <div className="row mb-12 gy-3  ">
           <div className="col-md-4  "  >
             <motion.div
@@ -519,7 +537,7 @@ const CodeClash = () => {
                         {prize.position}
                       </div>
                       <div className={styles.prizeAmount}>
-                        {prize.amount} 
+                        {prize.amount}
                         <span className={styles.cashPrizeText}>Cash prize</span>
                       </div>
                       <p className={styles.prizeDescription}>
@@ -694,7 +712,7 @@ const CodeClash = () => {
                       <div className={styles.formGroup}>
                         <label className={styles.formLabel}>Year of Passout *</label>
                         <div className={styles.radioGroup}>
-                          {['2024', '2025','2026'].map(year => (
+                          {['2024', '2025', '2026'].map(year => (
                             <div key={year} className={styles.radioItem}>
                               <input
                                 type="radio"
@@ -731,7 +749,7 @@ const CodeClash = () => {
                           <option value="btech">B.Tech</option>
                           <option value="degree">Degree</option>
                           <option value="diploma">Diploma</option>
-                          
+
                         </select>
                       </div>
                     </div>
@@ -795,17 +813,17 @@ const CodeClash = () => {
                   </h3>
                   <div className={styles.formGroup}>
                     <label className={styles.formLabel}>Languages and Frameworks you know *</label>
-                     <div className={styles.selectAllCheckboxContainer}>
-                        <input
-                          type="checkbox"
-                          id="select-all-languages"
-                          checked={formData.languages.length === languages.length}
-                          onChange={(e) => handleSelectAllLanguages(e.target.checked)}
-                        />
-                        <label htmlFor="select-all-languages">Select All</label>
-                      </div>
+                    <div className={styles.selectAllCheckboxContainer}>
+                      <input
+                        type="checkbox"
+                        id="select-all-languages"
+                        checked={formData.languages.length === languages.length}
+                        onChange={(e) => handleSelectAllLanguages(e.target.checked)}
+                      />
+                      <label htmlFor="select-all-languages">Select All</label>
+                    </div>
                     <div className={styles.checkboxGrid}>
-                     
+
                       {languages.map(lang => (
                         <div key={lang} className={styles.checkboxItem}>
                           <input
