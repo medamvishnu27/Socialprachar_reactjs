@@ -52,10 +52,17 @@ const Footer = () => {
     ];
 
     const QuickLinks = [
-        { name: 'Full Stack Web Development', path: '/full-stack-developer-course' },
-        { name: 'AWS + DevOps', path: '/awsdevopscourse' },
-        { name: 'Data Science + AI', path: '/data-science' },
-        { name: 'Digital Marketing', path: '/digital-marketing-course-training-institute-hyderabad/' },
+        { name: 'Data Science', path: '/data-science' },
+        { name: 'Python Full Stack', path: '/python-full-stack-development-course' },
+        { name: 'Java Full Stack', path: '/java-full-stack-development-course' },
+        { name: 'Full Stack Developer', path: '/full-stack-developer-course' },
+        { name: 'AWS DevOps', path: '/awsdevopscourse' },
+        { name: 'Artificial Intelligence', path: '/artificial-intelligence-course-training-institute-in-hyderabad' },
+        { name: 'Generative AI', path: '/generative-ai-course-training-institute-hyderabad' },
+        { name: 'Digital Marketing', path: '/digital-marketing-course-training-institute-hyderabad' },
+        { name: 'Data Analytics', path: '/data-analytics-course-training-hyderabad' },
+        { name: 'Snowflake', path: '/snowflake-training-in-hyderabad' },
+        { name: 'Salesforce', path: '/salesforce-course' },
         { name: 'Privacy Policy', path: '/privacy-policy' }
     ];
 
@@ -111,7 +118,7 @@ const Footer = () => {
                                 <img src={spLogo} alt="SP Logo" />
                             </div>
                             <p>
-                                SocialPrachar, founded by an IIM alumnus, is a leading EdTech company with 10+ years of expertise. We’ve trained 16,000+ students and achieved a 95% placement success rate with packages.
+                                SocialPrachar, founded by an IIM alumnus, is a leading EdTech company with 10+ years of expertise. We've trained 16,000+ students and achieved a 95% placement success rate with packages.
                                 Offering cutting-edge programs in Full Stack, Data Science, AI, and Cloud.
                             </p>
                             <div className="d-flex gap-4">
@@ -143,7 +150,7 @@ const Footer = () => {
                             <div>
                                 {QuickLinks.map((link, i) => (
                                     <div className={`${footerStyle.Explore}`} key={i} onClick={() => handleNavigate(link.path)}>
-                                        {link.name}
+                                        <a href={link.path} style={{color: 'inherit', textDecoration: 'none'}}>{link.name}</a>
                                     </div>
                                 ))}
                             </div>
@@ -153,7 +160,7 @@ const Footer = () => {
             </div >
 
             {/* Footer Copyright */}
-            <div div className={footerStyle.copyRight} >
+            <div className={footerStyle.copyRight} >
                 <p>Copyright © 2025 All Rights Reserved by Social Prachar</p>
             </div >
         </>

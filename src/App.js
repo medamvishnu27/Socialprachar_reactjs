@@ -391,7 +391,7 @@ const AppContent = () => {
           </Suspense>
 
           {!excludedPaths.includes(location.pathname) && <QuickHelpButton />}
-          {showPopup && <Popup setShowPopup={setShowPopup} />}
+          {/* {showPopup && <Popup setShowPopup={setShowPopup} />} */}
         </DateProvider>
       </WishListProvider>
 

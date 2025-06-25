@@ -50,11 +50,11 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && node sitemap-generator.js",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "lint": "eslint src --ext .js,.jsx",
-    "generate-sitemap": "node sitemap_generator.js"
+    "generate-sitemap": "node sitemap-generator.js"
   },
   "eslintConfig": {
     "extends": [

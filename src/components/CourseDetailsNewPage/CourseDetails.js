@@ -73,6 +73,72 @@ const routeMeta = {
   }
 };
 
+const DEFAULT_OG_IMAGE = "https://socialprachar.com/homeReplaceImage-removebg-preview.png";
+const SITE_NAME = "SocialPrachar";
+const PROVIDER = {
+  "@type": "Organization",
+  "name": SITE_NAME,
+  "url": "https://socialprachar.com",
+  "logo": DEFAULT_OG_IMAGE
+};
+
+const slugToName = {
+  "data-science": "Data Science",
+  "python-full-stack-development-course": "Python Full Stack",
+  "java-full-stack-development-course": "Java Full Stack",
+  "full-stack-developer-course": "Full Stack Developer",
+  "awsdevopscourse": "AWS DevOps",
+  "artificial-intelligence-course-training-institute-in-hyderabad": "Artificial Intelligence",
+  "generative-ai-course-training-institute-hyderabad": "Generative AI",
+  "digital-marketing-course-training-institute-hyderabad": "Digital Marketing",
+  "data-analytics-course-training-hyderabad": "Data Analytics",
+  "snowflake-training-in-hyderabad": "Snowflake",
+  "salesforce-course": "Salesforce"
+};
+
+const getCourseUrl = slug => `https://socialprachar.com/${slug}`;
+
+const getBreadcrumbListJsonLd = (slug) => {
+  const name = slugToName[slug] || slug.replace(/-/g, ' ');
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://socialprachar.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Courses", "item": "https://socialprachar.com/courses" },
+      { "@type": "ListItem", "position": 3, "name": name, "item": getCourseUrl(slug) }
+    ]
+  };
+};
+
+const getCourseJsonLd = (slug, meta) => {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": meta.title,
+    "description": meta.description,
+    "url": getCourseUrl(slug),
+    "provider": PROVIDER,
+    "offers": {
+      "@type": "Offer",
+      "priceCurrency": "INR",
+      "price": "0",
+      "availability": "https://schema.org/InStock",
+      "url": getCourseUrl(slug)
+    },
+    "hasCourseInstance": {
+      "@type": "CourseInstance",
+      "courseMode": "Online",
+      "startDate": "2025-07-01",
+      "endDate": "2025-12-31",
+      "location": {
+        "@type": "Place",
+        "name": "Hyderabad"
+      }
+    }
+  };
+};
+
 const CourseDetails = () => {
     const { slug } = useParams();
     if (!validSlugs.includes(slug)) {
@@ -83,12 +149,56 @@ const CourseDetails = () => {
       title: "SocialPrachar",
       description: "Learn more about our courses at SocialPrachar."
     };
+    const url = getCourseUrl(slug);
+    const ogImage = DEFAULT_OG_IMAGE;
+    const breadcrumbJsonLd = getBreadcrumbListJsonLd(slug);
+    const courseJsonLd = getCourseJsonLd(slug, meta);
 
     return (
         <>
           <Helmet>
+            {/* Basic Meta Tags */}
             <title>{meta.title}</title>
             <meta name="description" content={meta.description} />
+            <link rel="canonical" href={url} />
+            
+            {/* Open Graph / Facebook */}
+            <meta property="og:site_name" content={SITE_NAME} />
+            <meta property="og:type" content="website" />
+            <meta property="og:url" content={url} />
+            <meta property="og:title" content={meta.title} />
+            <meta property="og:description" content={meta.description} />
+            <meta property="og:image" content={ogImage} />
+            <meta property="og:image:width" content="1200" />
+            <meta property="og:image:height" content="630" />
+            <meta property="og:locale" content="en_US" />
+            
+            {/* Twitter */}
+            <meta name="twitter:card" content="summary_large_image" />
+            <meta name="twitter:site" content="@socialprachar" />
+            <meta name="twitter:url" content={url} />
+            <meta name="twitter:title" content={meta.title} />
+            <meta name="twitter:description" content={meta.description} />
+            <meta name="twitter:image" content={ogImage} />
+            
+            {/* WhatsApp */}
+            <meta property="og:image:alt" content={meta.title} />
+            <meta property="og:image:type" content="image/png" />
+            
+            {/* LinkedIn */}
+            <meta property="linkedin:card" content="summary_large_image" />
+            <meta property="linkedin:title" content={meta.title} />
+            <meta property="linkedin:description" content={meta.description} />
+            <meta property="linkedin:image" content={ogImage} />
+            
+            {/* Additional Meta for better sharing */}
+            <meta name="author" content={SITE_NAME} />
+            <meta name="robots" content="index, follow" />
+            <meta property="article:publisher" content="https://www.facebook.com/socialprachar" />
+            
+            {/* JSON-LD */}
+            <script type="application/ld+json">{JSON.stringify(breadcrumbJsonLd)}</script>
+            <script type="application/ld+json">{JSON.stringify(courseJsonLd)}</script>
           </Helmet>
           <Suspense fallback={<Loading />}>
               <Headerpart />
